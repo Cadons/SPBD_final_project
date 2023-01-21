@@ -13,8 +13,14 @@ import java.util.concurrent.atomic.AtomicReference;
 @Component
 @Service
 public class CustomerService implements ICustomerService{
+
+    private final CustomerRepository customerRepository;
     @Autowired
-    private CustomerRepository customerRepository;
+    public CustomerService(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
+
+
+    }
     @Override
     public int getCount() {
         return customerRepository.findAll().size();
@@ -71,7 +77,7 @@ public class CustomerService implements ICustomerService{
     @Override
     public CustomerEntity findById(int id) {
         AtomicReference<CustomerEntity> output=new AtomicReference<>();
-        customerRepository.findById(id).ifPresentOrElse(customerEntity -> output.set(customerEntity), () -> output.set(null));
+        customerRepository.findById(id).ifPresentOrElse(output::set, () -> output.set(null));
         return output.get();
     }
 

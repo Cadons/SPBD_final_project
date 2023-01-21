@@ -14,9 +14,9 @@ import java.util.List;
 @Component
 @Service
 public class EmployeeService implements IEmployeeService {
-    @Autowired
+
     private EmployeeRepository employeeRepository;
-    @Autowired
+
     private ICustomerService customerService;
 
     private EmployeeEntity employee;
@@ -24,7 +24,11 @@ public class EmployeeService implements IEmployeeService {
     public EmployeeService() {
     }
 
-
+    @Autowired
+    EmployeeService(EmployeeRepository employeeRepository, ICustomerService customerService) {
+        this.employeeRepository = employeeRepository;
+        this.customerService = customerService;
+    }
 
     private List<CustomerEntity> filteredCustomers(List<CustomerEntity> customers) {
         List<CustomerEntity> filteredCustomers = new ArrayList<>();
@@ -148,9 +152,11 @@ public class EmployeeService implements IEmployeeService {
     public void setEmployee(EmployeeEntity employee) {
         this.employee = employee;
     }
+
     public void setEmployeeRepository(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
     }
+
     public List<EmployeeEntity> findAllEmployees() {
         return employeeRepository.findAll();
     }

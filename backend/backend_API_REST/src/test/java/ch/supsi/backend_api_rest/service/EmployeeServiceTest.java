@@ -7,20 +7,13 @@ import ch.supsi.backend_api_rest.repository.EmployeeRepository;
 import ch.supsi.backend_api_rest.service.Criteria.Criteria;
 import ch.supsi.backend_api_rest.service.Criteria.FirstNameCriteria;
 import ch.supsi.backend_api_rest.service.Criteria.LastNameCriteria;
-import org.hibernate.service.spi.InjectService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.core.AutoConfigureCache;
-import org.springframework.boot.test.context.SpringBootTest;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +31,7 @@ public class EmployeeServiceTest {
     private CustomerRepository customerRepository;
 
     @InjectMocks
-    private ICustomerService customerService=new CustomerService();
+    private ICustomerService customerService=new CustomerService(customerRepository);
     @Mock
     private EmployeeRepository employeeRepository;
     @InjectMocks
