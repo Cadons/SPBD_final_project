@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Repository
@@ -17,5 +18,5 @@ public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Intege
     List<CustomerEntity> findAllBySupportreid(int employeeId);
 
     @Query("SELECT e FROM EmployeeEntity e WHERE e.username = ?1")
-    EmployeeEntity findByUsername(String username);
+    Optional<EmployeeEntity> findByUsername(String username);
 }

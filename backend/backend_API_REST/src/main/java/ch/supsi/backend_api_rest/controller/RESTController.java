@@ -1,6 +1,7 @@
 package ch.supsi.backend_api_rest.controller;
 
 import ch.supsi.backend_api_rest.model.CustomerEntity;
+import ch.supsi.backend_api_rest.security.LoginRequest;
 import ch.supsi.backend_api_rest.security.TokenService;
 import ch.supsi.backend_api_rest.service.ICustomerService;
 import ch.supsi.backend_api_rest.service.IEmployeeService;
@@ -9,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
@@ -22,17 +25,17 @@ public class RESTController {
 
 
     private static final Logger LOG = LoggerFactory.getLogger(RESTController.class);
-private final TokenService tokenService;
+
 
     private ICustomerService customerService;
     private IEmployeeService employeeService;
 
     @Autowired
-    public RESTController(ICustomerService customerService, IEmployeeService employeeService, TokenService tokenService) {
+    public RESTController(ICustomerService customerService, IEmployeeService employeeService) {
 
         this.customerService = customerService;
         this.employeeService = employeeService;
-        this.tokenService = tokenService;
+
     }
 
     @GetMapping(path = "/customers")
@@ -78,12 +81,6 @@ private final TokenService tokenService;
         return response != null && response.size() > 0 ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/token")
-    public String token(Authentication authentication) {
-        LOG.debug("Token requested for user: '{}'", authentication.getName());
-        String token = tokenService.generateToken(authentication);
-        LOG.debug("Token granted: {}", token);
-        return token;
-    }
+
 
 }

@@ -165,7 +165,11 @@ public class EmployeeService implements IEmployeeService {
         return employeeRepository.findById(id).orElse(null);
     }
     public EmployeeEntity findEmployeeByUsername(String username) {
-        return employeeRepository.findByUsername(username);
+        var employee = employeeRepository.findByUsername(username);
+        if(employee.get()==null){
+            return null;
+        }
+        return employee.get();
     }
 
 }

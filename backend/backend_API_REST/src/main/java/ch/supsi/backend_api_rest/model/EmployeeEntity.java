@@ -12,7 +12,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "employee", schema = "chinook", catalog = "")
-public class EmployeeEntity implements UserDetails {
+public class EmployeeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "employeeid")
@@ -210,15 +210,7 @@ public class EmployeeEntity implements UserDetails {
         isMenager = menager;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                return "ROLE_"+(isMenager?"MENAGER":"EMPLOYEE");
-            }
-        });
-    }
+
 
     public String getPassword() {
         return password;
@@ -245,25 +237,6 @@ public class EmployeeEntity implements UserDetails {
         return username;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 
     public void setUsername(String username) {
         this.username = username;
