@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CountryCriteria implements Criteria{
-    private String country;
+    private final String country;
 
     public CountryCriteria(String country) {
         this.country = country.toLowerCase();

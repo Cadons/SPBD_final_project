@@ -74,6 +74,7 @@ public class EmployeeServiceTest {
         customer4.setCountry("Italy");
         customer4.setCity("Rome");
         customer4.setAddress("Via Roma 4");
+
         customer4.setCompany("Company4");
 
         CustomerEntity customer5 = new CustomerEntity();
@@ -131,6 +132,7 @@ public class EmployeeServiceTest {
         employeeEntity.setAddress("Via Roma 1");
         employeeEntity.setPhone("1234567890");
         employeeEntity.setMenager(false);
+        employeeEntity.setUsername("mario.rossi");
 
         EmployeeEntity employeeEntity2 = new EmployeeEntity();
         employeeEntity2.setEmployeeid(2);
@@ -153,18 +155,19 @@ public class EmployeeServiceTest {
         customer3.setSupportrepid(employeeEntity);
         lenient().when(employeeRepository.findAll()).thenReturn(employeeEntities);
         lenient().when(employeeRepository.findById(any())).thenReturn(Optional.ofNullable(employeeEntities.get(0)));
+        lenient().when(employeeRepository.findByUsername(any())).thenReturn(employeeEntities.get(0));
 
         employeeService.setCustomerService(customerService);
         employeeService.setEmployeeRepository(employeeRepository);
-        employeeService.setEmployee(employeeRepository.findAll().get(0));
+        employeeService.setCurrentEmployee(employeeRepository.findAll().get(0));
 
     }
 
     @Test
     void testFindAll() {
-        employeeService.setEmployee(employeeRepository.findAll().get(0));
+        employeeService.setCurrentEmployee(employeeRepository.findAll().get(0));
         Assertions.assertEquals(3, employeeService.findAll().size());
-        employeeService.setEmployee(employeeRepository.findAll().get(1));
+        employeeService.setCurrentEmployee(employeeRepository.findAll().get(1));
         Assertions.assertEquals(7, employeeService.findAll().size());
     }
 
@@ -234,20 +237,26 @@ public class EmployeeServiceTest {
 
     @Test
     void testSave() {
-        int size = employeeService.getEmployee().getCustomersByEmployeeid().size();
+        int size = employeeService.getCurrentEmployee().getCustomersByEmployeeid().size();
         employeeService.save(customerService.findById(4));
-        Assertions.assertEquals(size+1, employeeService.getEmployee().getCustomersByEmployeeid().size());
+        Assertions.assertEquals(size+1, employeeService.getCurrentEmployee().getCustomersByEmployeeid().size());
     }
 
     @Test
     void testDelete() {
         int id = 1;
         Assertions.assertTrue(employeeService.deleteById(id));
-        Assertions.assertEquals(2, employeeService.getEmployee().getCustomersByEmployeeid().size());
+        Assertions.assertEquals(2, employeeService.getCurrentEmployee().getCustomersByEmployeeid().size());
     }
     @Test
     void testFindAllEmplyees(){
         Assertions.assertEquals(2, employeeService.findAllEmployees().size());
     }
 
+    @Test
+    void testFindEmployeeByUsername(){
+        var t=employeeService.findEmployeeByUsername("mario.rossi");
+
+        Assertions.assertNotNull( employeeService.findEmployeeByUsername("mario.rossi"));
+    }
 }

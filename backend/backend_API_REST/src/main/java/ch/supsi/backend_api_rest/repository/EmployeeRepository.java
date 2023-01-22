@@ -15,4 +15,7 @@ public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Intege
 
     @Query("SELECT c FROM CustomerEntity c WHERE c.supportrepid = ?1")
     List<CustomerEntity> findAllBySupportreid(int employeeId);
+
+    @Query("SELECT e FROM EmployeeEntity e WHERE e.username = ?1")
+    EmployeeEntity findByUsername(String username);
 }

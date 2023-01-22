@@ -1,14 +1,18 @@
 package ch.supsi.backend_api_rest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "employee", schema = "chinook", catalog = "")
-public class EmployeeEntity {
+public class EmployeeEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "employeeid")
@@ -60,6 +64,13 @@ public class EmployeeEntity {
     @Column(name = "isMenager")
     private boolean isMenager=false;
 
+    @Basic
+    @Column(name = "password")
+    @JsonIgnore
+    private String password;
+    @Basic
+    @Column(name = "username",unique = true)
+    private String username;
     @OneToMany(mappedBy = "supportrepid")
     private List<CustomerEntity> customersByEmployeeid;
 
@@ -200,6 +211,24 @@ public class EmployeeEntity {
     }
 
     @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new GrantedAuthority() {
+            @Override
+            public String getAuthority() {
+                return "ROLE_"+(isMenager?"MENAGER":"EMPLOYEE");
+            }
+        });
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -210,5 +239,33 @@ public class EmployeeEntity {
     @Override
     public int hashCode() {
         return Objects.hash(employeeid, lastname, firstname, title, reportsto, birthdate, hiredate, address, city, state, country, postalcode, phone, fax, email);
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

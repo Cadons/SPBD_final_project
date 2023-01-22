@@ -6,8 +6,8 @@ import ch.supsi.backend_api_rest.model.EmployeeEntity;
 import java.util.List;
 
 public class OrCriteria implements Criteria {
-    private Criteria criteria;
-    private Criteria otherCriteria;
+    private final Criteria criteria;
+    private final Criteria otherCriteria;
 
     public OrCriteria(Criteria criteria, Criteria otherCriteria) {
         this.criteria = criteria;

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CompanyCriteria implements Criteria {
-    private String company;
+    private final String company;
 
     public CompanyCriteria(String company) {
         this.company = company.toLowerCase();

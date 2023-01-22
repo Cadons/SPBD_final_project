@@ -9,11 +9,13 @@ import java.util.List;
 
 public interface IEmployeeService extends ICustomerService{
     List<CustomerEntity> getCustomers();
-    void setEmployee(EmployeeEntity employee);
+    void setCurrentEmployee(EmployeeEntity currentEmployee);
     boolean isMenager(int id);
 
     void setCustomerService(ICustomerService customerService);
     void setEmployeeRepository(EmployeeRepository employeeRepository);
-    EmployeeEntity getEmployee();
+    EmployeeEntity getCurrentEmployee();
+    EmployeeEntity findEmployeeById(int id);
+    EmployeeEntity findEmployeeByUsername(String username);
     List<EmployeeEntity> findAllEmployees();
 }

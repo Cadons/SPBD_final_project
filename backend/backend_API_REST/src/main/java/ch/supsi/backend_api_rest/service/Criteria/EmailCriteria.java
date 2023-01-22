@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EmailCriteria implements Criteria {
-    private String email;
+    private final String email;
 
     public EmailCriteria(String email) {
         this.email = email.toLowerCase();

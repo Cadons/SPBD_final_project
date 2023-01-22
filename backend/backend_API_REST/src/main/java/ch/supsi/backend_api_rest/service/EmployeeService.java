@@ -19,7 +19,7 @@ public class EmployeeService implements IEmployeeService {
 
     private ICustomerService customerService;
 
-    private EmployeeEntity employee;
+    private EmployeeEntity currentEmployee;
 
     public EmployeeService() {
     }
@@ -32,10 +32,10 @@ public class EmployeeService implements IEmployeeService {
 
     private List<CustomerEntity> filteredCustomers(List<CustomerEntity> customers) {
         List<CustomerEntity> filteredCustomers = new ArrayList<>();
-        if (!employee.isMenager()) {
+        if (!currentEmployee.isMenager()) {
             for (CustomerEntity customer : customers) {
                 if (customer.getSupportrepid() != null) {
-                    if (customer.getSupportrepid().getEmployeeid() == employee.getEmployeeid()) {
+                    if (customer.getSupportrepid().getEmployeeid() == currentEmployee.getEmployeeid()) {
                         filteredCustomers.add(customer);
                     }
                 }
@@ -99,7 +99,7 @@ public class EmployeeService implements IEmployeeService {
     @Override
     public CustomerEntity findById(int id) {
         var customer = customerService.findById(id);
-        if (customer.getSupportrepid().getEmployeeid() == employee.getEmployeeid()) {
+        if (customer.getSupportrepid().getEmployeeid() == currentEmployee.getEmployeeid()) {
             return customer;
         } else {
             return null;
@@ -108,15 +108,15 @@ public class EmployeeService implements IEmployeeService {
 
     @Override
     public CustomerEntity save(CustomerEntity customer) {
-        employee.getCustomersByEmployeeid().add(customer);
+        currentEmployee.getCustomersByEmployeeid().add(customer);
         return customerService.save(customer);
     }
 
     @Override
     public boolean deleteById(int id) {
         var customer = customerService.findById(id);
-        if (customer.getSupportrepid().getEmployeeid() == employee.getEmployeeid()) {
-            employee.getCustomersByEmployeeid().remove(customer);
+        if (customer.getSupportrepid().getEmployeeid() == currentEmployee.getEmployeeid()) {
+            currentEmployee.getCustomersByEmployeeid().remove(customer);
             return true;
         } else {
             return false;
@@ -132,7 +132,7 @@ public class EmployeeService implements IEmployeeService {
 
     @Override
     public boolean isMenager(int id) {
-        return employee.isMenager();
+        return currentEmployee.isMenager();
     }
 
     @Override
@@ -145,12 +145,12 @@ public class EmployeeService implements IEmployeeService {
         return employeeRepository.findAll().size();
     }
 
-    public EmployeeEntity getEmployee() {
-        return employee;
+    public EmployeeEntity getCurrentEmployee() {
+        return currentEmployee;
     }
 
-    public void setEmployee(EmployeeEntity employee) {
-        this.employee = employee;
+    public void setCurrentEmployee(EmployeeEntity currentEmployee) {
+        this.currentEmployee = currentEmployee;
     }
 
     public void setEmployeeRepository(EmployeeRepository employeeRepository) {
@@ -161,6 +161,12 @@ public class EmployeeService implements IEmployeeService {
         return employeeRepository.findAll();
     }
 
+    public EmployeeEntity findEmployeeById(int id) {
+        return employeeRepository.findById(id).orElse(null);
+    }
+    public EmployeeEntity findEmployeeByUsername(String username) {
+        return employeeRepository.findByUsername(username);
+    }
 
 }
 

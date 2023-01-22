@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FirstNameCriteria implements Criteria {
-    private String name;
+    private final String name;
 
     public FirstNameCriteria(String name) {
         this.name = name.toLowerCase();
