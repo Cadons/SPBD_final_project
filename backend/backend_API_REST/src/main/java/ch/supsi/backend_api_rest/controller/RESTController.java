@@ -1,6 +1,7 @@
 package ch.supsi.backend_api_rest.controller;
 
 import ch.supsi.backend_api_rest.model.CustomerEntity;
+import ch.supsi.backend_api_rest.security.TokenService;
 import ch.supsi.backend_api_rest.service.ICustomerService;
 import ch.supsi.backend_api_rest.service.IEmployeeService;
 //import ch.supsi.backend_api_rest.service.TokenService;
@@ -21,16 +22,17 @@ public class RESTController {
 
 
     private static final Logger LOG = LoggerFactory.getLogger(RESTController.class);
-
+private final TokenService tokenService;
 
     private ICustomerService customerService;
     private IEmployeeService employeeService;
 
     @Autowired
-    public RESTController(ICustomerService customerService, IEmployeeService employeeService) {
+    public RESTController(ICustomerService customerService, IEmployeeService employeeService, TokenService tokenService) {
 
         this.customerService = customerService;
         this.employeeService = employeeService;
+        this.tokenService = tokenService;
     }
 
     @GetMapping(path = "/customers")
@@ -76,6 +78,12 @@ public class RESTController {
         return response != null && response.size() > 0 ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
     }
 
-
+    @PostMapping("/token")
+    public String token(Authentication authentication) {
+        LOG.debug("Token requested for user: '{}'", authentication.getName());
+        String token = tokenService.generateToken(authentication);
+        LOG.debug("Token granted: {}", token);
+        return token;
+    }
 
 }
