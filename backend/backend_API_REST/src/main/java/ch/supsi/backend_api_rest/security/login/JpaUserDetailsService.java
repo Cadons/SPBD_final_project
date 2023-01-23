@@ -1,7 +1,6 @@
-package ch.supsi.backend_api_rest.security;
+package ch.supsi.backend_api_rest.security.login;
 
 import ch.supsi.backend_api_rest.repository.EmployeeRepository;
-import ch.supsi.backend_api_rest.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

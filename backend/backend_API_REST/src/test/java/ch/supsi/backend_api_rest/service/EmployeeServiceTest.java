@@ -31,11 +31,11 @@ public class EmployeeServiceTest {
     private CustomerRepository customerRepository;
 
     @InjectMocks
-    private ICustomerService customerService=new CustomerService(customerRepository);
+    private CustomerService customerService;
     @Mock
     private EmployeeRepository employeeRepository;
     @InjectMocks
-    private IEmployeeService employeeService = new EmployeeService();
+    private EmployeeService employeeService;
 
     @BeforeEach
     void setUp() {
@@ -155,7 +155,7 @@ public class EmployeeServiceTest {
         customer3.setSupportrepid(employeeEntity);
         lenient().when(employeeRepository.findAll()).thenReturn(employeeEntities);
         lenient().when(employeeRepository.findById(any())).thenReturn(Optional.ofNullable(employeeEntities.get(0)));
-        lenient().when(employeeRepository.findByUsername(any())).thenReturn(employeeEntities.get(0));
+        lenient().when(employeeRepository.findByUsername(any())).thenReturn(Optional.ofNullable(employeeEntities.get(0)));
 
         employeeService.setCustomerService(customerService);
         employeeService.setEmployeeRepository(employeeRepository);

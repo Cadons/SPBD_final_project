@@ -1,4 +1,4 @@
-package ch.supsi.backend_api_rest.security;
+package ch.supsi.backend_api_rest.security.login;
 
 import ch.supsi.backend_api_rest.model.EmployeeEntity;
 import org.springframework.security.core.GrantedAuthority;

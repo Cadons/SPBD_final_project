@@ -26,7 +26,7 @@ public class CustomerServiceTest {
     private CustomerRepository customerRepository;
 
     @InjectMocks
-    private ICustomerService customerService = new CustomerService(customerRepository);
+    private CustomerService customerService;
 
 
 
@@ -105,7 +105,6 @@ public class CustomerServiceTest {
         customerEntities.add(customer5);
         customerEntities.add(customer6);
         customerEntities.add(customer7);
-
         lenient().when(customerRepository.findAll()).thenReturn(customerEntities);
         lenient().doAnswer(e -> {
             customerEntities.add(e.getArgument(0));
