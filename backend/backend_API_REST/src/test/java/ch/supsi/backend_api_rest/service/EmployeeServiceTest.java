@@ -14,6 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +28,8 @@ import static org.mockito.Mockito.*;
 public class EmployeeServiceTest {
 
 
-
+@Mock
+private PasswordEncoder passwordEncoder;
     @Mock
     private CustomerRepository customerRepository;
 
@@ -120,8 +123,8 @@ public class EmployeeServiceTest {
         }).when(customerRepository).save(any(CustomerEntity.class));
         lenient().doAnswer((e) -> customerEntities.remove(1)).when(customerRepository).deleteById(any());
         lenient().when(customerRepository.findById(any())).thenReturn(java.util.Optional.of(customerEntities.get(0)));
+    lenient().when(passwordEncoder.encode(any())).thenReturn("encodedPassword");
 
-        employeeService = new EmployeeService();
         List<EmployeeEntity> employeeEntities = new ArrayList<>();
         EmployeeEntity employeeEntity = new EmployeeEntity();
         employeeEntity.setEmployeeid(1);
@@ -258,5 +261,21 @@ public class EmployeeServiceTest {
         var t=employeeService.findEmployeeByUsername("mario.rossi");
 
         Assertions.assertNotNull( employeeService.findEmployeeByUsername("mario.rossi"));
+    }
+    @Test
+    void testUpdateCurrentEmployee(){
+
+        var employeeEntity= employeeService.getCurrentEmployee();
+        employeeEntity.setFirstname("Gianluca");
+        employeeService.updateCurrentEmployee(employeeEntity);
+        Assertions.assertEquals("Gianluca", employeeService.getCurrentEmployee().getFirstname());
+
+    }
+    @Test
+    void testChangePassword(){
+        var employeeEntity= employeeService.getCurrentEmployee();
+        var oldPassword=employeeEntity.getPassword();
+        employeeService.changePassword("123456789230");
+        Assertions.assertNotEquals(oldPassword, employeeService.getCurrentEmployee().getPassword());
     }
 }

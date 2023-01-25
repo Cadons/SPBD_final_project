@@ -23,12 +23,18 @@ public class CheckLoginInterceptor implements HandlerInterceptor {
         if (token == null || token.isEmpty())
             return false;
         token = token.replace("Bearer ", "");
+        //check if token is valid
+
         if (tokenService.isLogged(tokenService.getUsernameFromToken(token))) {
-            employeeService.setCurrentEmployee(employeeService.findEmployeeByUsername(tokenService.getUsernameFromToken(token)));
-            return true;
-        } else {
-            return false;
+            if(tokenService.validateToken(token)) {
+                employeeService.setCurrentEmployee(employeeService.findEmployeeByUsername(tokenService.getUsernameFromToken(token)));
+                return true;
+            }else{
+                tokenService.revokeUser(tokenService.getUsernameFromToken(token));
+            }
         }
+            return false;
+
 
 
     }

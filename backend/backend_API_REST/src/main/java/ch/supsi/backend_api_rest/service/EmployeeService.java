@@ -5,6 +5,9 @@ import ch.supsi.backend_api_rest.model.EmployeeEntity;
 import ch.supsi.backend_api_rest.repository.EmployeeRepository;
 import ch.supsi.backend_api_rest.service.Criteria.Criteria;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -15,18 +18,19 @@ import java.util.List;
 @Service
 public class EmployeeService implements IEmployeeService {
 
+    private  PasswordEncoder passwordEncoder;
     private EmployeeRepository employeeRepository;
 
     private ICustomerService customerService;
 
     private EmployeeEntity currentEmployee;
 
-    public EmployeeService() {
-    }
+
 
     @Autowired
-    EmployeeService(EmployeeRepository employeeRepository, ICustomerService customerService) {
+    public EmployeeService(EmployeeRepository employeeRepository, ICustomerService customerService, PasswordEncoder passwordEncoder) {
         this.employeeRepository = employeeRepository;
+        this.passwordEncoder = passwordEncoder;
         this.customerService = customerService;
     }
 
@@ -159,6 +163,36 @@ public class EmployeeService implements IEmployeeService {
 
     public List<EmployeeEntity> findAllEmployees() {
         return employeeRepository.findAll();
+    }
+
+    @Override
+    public void updateCurrentEmployee(EmployeeEntity employeeEntity) {
+    //copy all parameters in currentEmployee except password and username and employeeid and menager they are not modifiable
+        //for GDPR reasons it's possible edit all personal informations, password is in another method
+        currentEmployee.setFirstname(employeeEntity.getFirstname());
+        currentEmployee.setLastname(employeeEntity.getLastname());
+        currentEmployee.setAddress(employeeEntity.getAddress());
+        currentEmployee.setCity(employeeEntity.getCity());
+        currentEmployee.setState(employeeEntity.getState());
+        currentEmployee.setCountry(employeeEntity.getCountry());
+        currentEmployee.setPostalcode(employeeEntity.getPostalcode());
+        currentEmployee.setPhone(employeeEntity.getPhone());
+        currentEmployee.setFax(employeeEntity.getFax());
+        currentEmployee.setEmail(employeeEntity.getEmail());
+        currentEmployee.setTitle(employeeEntity.getTitle());
+        currentEmployee.setReportsto(employeeEntity.getReportsto());
+        currentEmployee.setBirthdate(employeeEntity.getBirthdate());
+        currentEmployee.setHiredate(employeeEntity.getHiredate());
+
+
+        employeeRepository.save(currentEmployee);
+    }
+
+    @Override
+    public boolean changePassword(String password) {
+        currentEmployee.setPassword(passwordEncoder.encode(password));
+        employeeRepository.save(currentEmployee);
+        return true;
     }
 
     public EmployeeEntity findEmployeeById(int id) {

@@ -18,4 +18,6 @@ public interface IEmployeeService extends ICustomerService{
     EmployeeEntity findEmployeeById(int id);
     EmployeeEntity findEmployeeByUsername(String username);
     List<EmployeeEntity> findAllEmployees();
+    boolean changePassword(String password);
+    void updateCurrentEmployee(EmployeeEntity employeeEntity);
 }

@@ -17,6 +17,7 @@ public interface ICustomerService extends UserService {
     List<CustomerEntity> orCriteria(Criteria criteria1, Criteria criteria2);
     CustomerEntity findById(int id);
     CustomerEntity save(CustomerEntity customer);
+
     boolean deleteById(int id);
 
 }
