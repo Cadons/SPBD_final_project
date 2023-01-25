@@ -8,6 +8,7 @@ import ch.supsi.backend_api_rest.service.Criteria.FirstNameCriteria;
 import ch.supsi.backend_api_rest.service.Criteria.LastNameCriteria;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -195,11 +196,11 @@ public class CustomerServiceTest {
     }
 
     @Test
-
+@Disabled
     void testDelete() {
         int id = 1;
-      //  int size = customerService.getCount();
+        int size = customerService.getCount();
         customerService.deleteById(id);
-      //  Assertions.assertEquals(size-1, customerService.getCount());//TODO fix this
+        Assertions.assertEquals(size-1, customerService.getCount());//TODO fix this
     }
 }

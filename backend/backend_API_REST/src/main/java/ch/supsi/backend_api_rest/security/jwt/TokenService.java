@@ -63,7 +63,7 @@ public class TokenService {
     }
     public boolean revokeUser(String username)
     {
-        if(tokenRefreshRepository.find(username).equals(""))
+        if(tokenRefreshRepository.checkIfLogged(username))
         {
             tokenRefreshRepository.logoutUser(username);
             return true;

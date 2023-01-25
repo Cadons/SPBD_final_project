@@ -16,6 +16,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthenticationController {
@@ -32,58 +34,61 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> token(@RequestBody LoginRequest loginRequest) {
-        if(loginRequest.username()==null || loginRequest.password()==null)
-        {
+
+        if (loginRequest.username() == null || loginRequest.password() == null) {
             return ResponseEntity.badRequest().build();
         }
-        if(loginRequest.username().equals("") || loginRequest.password().equals(""))
-        {
+        if (loginRequest.username().equals("") || loginRequest.password().equals("")) {
             return ResponseEntity.badRequest().build();
         }
-        if(!tokenService.isLogged(loginRequest.username()))
-        {
-            LOG.debug("Token requested for user: '{}'", loginRequest.username());
+        if (!tokenService.isLogged(loginRequest.username())) {
+
+            LOG.trace("Token requested for user: '{}'", loginRequest.username());
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password()));
 
             var token = tokenService.generateToken(authentication);
-            LOG.debug("Token granted: {}", token);
+            LOG.trace("Token granted");
+            LOG.trace("User: " + loginRequest.username() + " logged in");
             return new ResponseEntity<>(token, HttpStatus.OK);
-        }else{
+        } else {
             return ResponseEntity.ok().build();
         }
     }
+
     @PostMapping("/logout")
     public ResponseEntity<AuthResponse> logout(@RequestHeader("Authorization") String BearerToken) {
-        try{
-            BearerToken=BearerToken.replace("Bearer ","");
-            if(tokenService.revokeUser(tokenService.getUsernameFromToken(BearerToken)))
-            {
+        try {
+            BearerToken = BearerToken.replace("Bearer ", "");
+            if (tokenService.revokeUser(tokenService.getUsernameFromToken(BearerToken))) {
+                LOG.trace("User: " + tokenService.getUsernameFromToken(BearerToken) + " logged out");
                 return ResponseEntity.ok().build();
-            }
-            else
-            {
+            } else {
                 return ResponseEntity.badRequest().build();
             }
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
+
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refreshToken(@RequestBody RequestRefresh BearerToken) {
-            return getAuthResponseResponseEntity(BearerToken.refresh());
+
+        var username = tokenService.getUsernameFromToken(BearerToken.token().replace("Bearer ", ""));
+
+        LOG.trace("User: " + username + " requested refresh");
+        return getAuthResponseResponseEntity(BearerToken.refresh());
     }
 
     @NotNull
     private ResponseEntity<AuthResponse> getAuthResponseResponseEntity(String BearerToken) {
-        BearerToken=BearerToken.replace("Bearer ","");
+        BearerToken = BearerToken.replace("Bearer ", "");
 
         try {
-                var newToken = tokenService.refreshToken(BearerToken);
-                return ResponseEntity.ok(newToken);
-            } catch (InvalidBearerTokenException e) {
-                return ResponseEntity.badRequest().build();
-            }
+            var newToken = tokenService.refreshToken(BearerToken);
+            return ResponseEntity.ok(newToken);
+        } catch (InvalidBearerTokenException e) {
+            return ResponseEntity.badRequest().build();
+        }
 
 
     }
