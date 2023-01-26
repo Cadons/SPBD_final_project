@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{master::masterLayout(~{::title},~{::main})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+</head>
+<body>
+<main id="main">
+    <!--create bootstrap form with chinook employee data-->
+    <form th:action="@{/profile}" method="post" >
+        <div class="container">
+            <div class="row">
+                <div class="col-25">
+                    <label class=" form-label" for="lastName">Last Name</label>
+                </div>
+                <div class="col-75">
+                    <input class=" form-control" type="text" id="lastName" name="lastName" value="${employee.lastName}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label class=" form-label" for="firstName">First Name</label>
+                </div>
+                <div class="col-75">
+                    <input  class=" form-control" type="text" id="firstName" name="firstName" value="${employee.firstName}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label class=" form-label" for="title">Title</label>
+                </div>
+                <div class="col-75">
+                    <input class=" form-control" type="text" id="title" name="title" value="${employee.title}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label class=" form-label" for="reportsTo">Reports To</label>
+                </div>
+                <div class="col-75">
+                    <input class=" form-control" type="text" id="reportsTo" name="reportsTo" value="${employee.reportsTo}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label class=" form-label" for="birthDate">Birth Date</label>
+                </div>
+                <div class="col-75">
+                    <input class=" form-control" type="date" id="birthDate" name="birthDate" value="${employee.birthDate}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label class=" form-label" for="hireDate">Hire Date</label>
+                </div>
+                <div class="col-75">
+                    <input class=" form-control" type="date" id="hireDate" name="hireDate" value="${employee.hireDate}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label class=" form-label" for="address">Address</label>
+                </div>
+                <div class="col-75">
+                    <input class=" form-control" type="text" id="address" name="address" value="${employee.address}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label class=" form-label" for="city">City</label>
+                </div>
+                <div class="col-75">
+                    <input class=" form-control" type="text" id="city" name="city" value="${employee.city}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label class=" form-label" for="state">State</label>
+                </div>
+                <div class="col-75">
+                    <input class=" form-control" type="text" id="state" name="state" value="${employee.state}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label class=" form-label" for="country">Country</label>
+                </div>
+                <div class="col-75">
+                    <input class=" form-control" type="text" id="country" name="country" value="${employee.country}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label class=" form-label" for="postalCode">Postal Code</label>
+                </div>
+                <div class="col-75">
+                    <input class=" form-control" type="text" id="postalCode" name="postalCode" value="${employee.postalCode}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label class=" form-label" for="phone">Phone</label>
+                </div>
+                <div class="col-75">
+                    <input class=" form-control" type="tel" id="phone" name="phone" value="${employee.phone}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label class=" form-label" for="fax">Fax</label>
+                </div>
+                <div class="col-75">
+                    <input class=" form-control" type="text" id="fax" name="fax" value="${employee.fax}">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label class=" form-label" for="email">Email</label>
+                </div>
+                <div class="col-75">
+                    <input class=" form-control" type="email" id="email" name="email" value="${employee.email}">
+                </div>
+            </div>
+            <div class="row">
+                <a th:href="@{/changePassword}">Edit password</a>
+            </div>
+            <div class="row">
+
+                <input class="btn btn-primary " type="submit" value="Update">
+            </div>
+        </div>
+    </form>
+    
+</main>
+</body>
+</html>
