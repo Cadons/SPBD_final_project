@@ -1,5 +1,7 @@
 package ch.supsi.backend_api_rest.security.jwt;
 
+import ch.supsi.backend_api_rest.exceptions.UnauthorizedOperation;
+import ch.supsi.backend_api_rest.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
@@ -22,14 +24,19 @@ public class TokenService {
 
 
     private final TokenRefreshRepository tokenRefreshRepository;
+    private final int TOKEN_EXPIRATION = 2;
+    private final int REFRESH_EXPIRATION = 10;
     private final JwtEncoder encoder;
     private final JwtDecoder decoder;
+    private final EmployeeRepository employeeRepository;
 
     @Autowired
-    public TokenService(TokenRefreshRepository tokenRefreshRepository, JwtEncoder encoder, JwtDecoder decoder) {
+    public TokenService(TokenRefreshRepository tokenRefreshRepository, JwtEncoder encoder, JwtDecoder decoder,
+                        EmployeeRepository employeeRepository) {
         this.tokenRefreshRepository = tokenRefreshRepository;
         this.encoder = encoder;
         this.decoder = decoder;
+        this.employeeRepository = employeeRepository;
     }
 
     public AuthResponse generateToken(Authentication authentication) {
@@ -41,7 +48,7 @@ public class TokenService {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
-                .expiresAt(now.plus(1, ChronoUnit.MINUTES))
+                .expiresAt(now.plus(TOKEN_EXPIRATION, ChronoUnit.MINUTES))
                 .subject(authentication.getName())
                 .claim("scope", scope)
                 .build();
@@ -50,14 +57,14 @@ public class TokenService {
         JwtClaimsSet refreshClaims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
-                .expiresAt(now.plus(1, ChronoUnit.HOURS))
+                .expiresAt(now.plus(REFRESH_EXPIRATION, ChronoUnit.MINUTES))
                 .subject(authentication.getName())
                 .claim("scope", scope)
                 .build();
         String refreshToken = this.encoder.encode(JwtEncoderParameters.from(refreshClaims)).getTokenValue();
 
         //store on redis
-        tokenRefreshRepository.save(refreshToken, "jwt-refresh-token:" + authentication.getName(), 30, TimeUnit.DAYS);
+        tokenRefreshRepository.save(refreshToken, "jwt-refresh-token:" + authentication.getName(), REFRESH_EXPIRATION, TimeUnit.MINUTES);
         tokenRefreshRepository.loginUser(authentication.getName());
         return new AuthResponse(token, authentication.getName(), refreshToken, "Bearer");
     }
@@ -78,12 +85,16 @@ public class TokenService {
 
     }
 
-    public AuthResponse refreshToken(String refreshToken) {
+    public AuthResponse refreshToken(String refreshToken) throws UnauthorizedOperation {
         if (!validateToken(refreshToken)) {
             throw new InvalidBearerTokenException("Invalid refresh token");
         }
 
         String username = getUsernameFromToken(refreshToken);
+        if(!employeeRepository.findByUsername(username).get().isMenager())
+        {
+                throw new UnauthorizedOperation("You are not a menager and you can't refresh your token");
+        }
         String storedRefreshToken = tokenRefreshRepository.find("jwt-refresh-token:" + username);
         if (!storedRefreshToken.equals(refreshToken)) {
             throw new InvalidBearerTokenException("Invalid refresh token");
@@ -93,7 +104,7 @@ public class TokenService {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
-                .expiresAt(now.plus(1, ChronoUnit.MINUTES))
+                .expiresAt(now.plus(TOKEN_EXPIRATION, ChronoUnit.MINUTES))
                 .subject(username)
                 .claim("scope", "")
                 .build();

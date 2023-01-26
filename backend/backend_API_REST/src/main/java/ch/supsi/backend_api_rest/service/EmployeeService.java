@@ -190,10 +190,14 @@ public class EmployeeService implements IEmployeeService {
 
     @Override
     public boolean changePassword(String password) {
+       if(!checkPassword(password)) {
+           return false;
+       }
         currentEmployee.setPassword(passwordEncoder.encode(password));
         employeeRepository.save(currentEmployee);
         return true;
     }
+
 
     public EmployeeEntity findEmployeeById(int id) {
         return employeeRepository.findById(id).orElse(null);
@@ -206,5 +210,13 @@ public class EmployeeService implements IEmployeeService {
         return employee.get();
     }
 
+    @Override
+    public boolean checkPassword(String newPassword) {
+
+        if(passwordEncoder.matches(newPassword,currentEmployee.getPassword())||newPassword==null||newPassword.isEmpty()){
+            return false;
+        }
+        return true;
+    }
 }
 

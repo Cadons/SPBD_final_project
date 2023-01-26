@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -123,7 +125,7 @@ private PasswordEncoder passwordEncoder;
         }).when(customerRepository).save(any(CustomerEntity.class));
         lenient().doAnswer((e) -> customerEntities.remove(1)).when(customerRepository).deleteById(any());
         lenient().when(customerRepository.findById(any())).thenReturn(java.util.Optional.of(customerEntities.get(0)));
-    lenient().when(passwordEncoder.encode(any())).thenReturn("encodedPassword");
+        lenient().when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
 
         List<EmployeeEntity> employeeEntities = new ArrayList<>();
         EmployeeEntity employeeEntity = new EmployeeEntity();
@@ -248,7 +250,7 @@ private PasswordEncoder passwordEncoder;
     @Test
     void testDelete() {
         int id = 1;
-        Assertions.assertTrue(employeeService.deleteById(id));
+        assertTrue(employeeService.deleteById(id));
         Assertions.assertEquals(2, employeeService.getCurrentEmployee().getCustomersByEmployeeid().size());
     }
     @Test
@@ -275,7 +277,19 @@ private PasswordEncoder passwordEncoder;
     void testChangePassword(){
         var employeeEntity= employeeService.getCurrentEmployee();
         var oldPassword=employeeEntity.getPassword();
+        lenient().when(passwordEncoder.encode(any())).thenReturn("encodedPassword");
+        assertFalse(employeeService.changePassword(oldPassword));
         employeeService.changePassword("123456789230");
+
         Assertions.assertNotEquals(oldPassword, employeeService.getCurrentEmployee().getPassword());
+    }
+    @Test
+    void testCheckPassword(){
+     //create test for checkPassword method if password are equals it return false otherwise true, im using mock of passwordEncoder
+               assertTrue(employeeService.checkPassword("1234567890"));
+               lenient().when(passwordEncoder.matches(anyString(),eq(employeeService.getCurrentEmployee().getPassword()))).thenReturn(false);
+
+        assertFalse(employeeService.checkPassword(employeeService.getCurrentEmployee().getPassword()));
+
     }
 }

@@ -1,5 +1,6 @@
 package ch.supsi.backend_api_rest.controller;
 
+import ch.supsi.backend_api_rest.exceptions.UnauthorizedOperation;
 import ch.supsi.backend_api_rest.security.jwt.AuthResponse;
 import ch.supsi.backend_api_rest.security.jwt.RequestRefresh;
 import ch.supsi.backend_api_rest.security.jwt.TokenService;
@@ -73,7 +74,7 @@ public class AuthenticationController {
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refreshToken(@RequestBody RequestRefresh BearerToken) {
 
-        var username = tokenService.getUsernameFromToken(BearerToken.token().replace("Bearer ", ""));
+        var username = tokenService.getUsernameFromToken(BearerToken.refresh().replace("Bearer ", ""));
 
         LOG.trace("User: " + username + " requested refresh");
         return getAuthResponseResponseEntity(BearerToken.refresh());
@@ -88,6 +89,9 @@ public class AuthenticationController {
             return ResponseEntity.ok(newToken);
         } catch (InvalidBearerTokenException e) {
             return ResponseEntity.badRequest().build();
+        }
+        catch (UnauthorizedOperation e){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
 

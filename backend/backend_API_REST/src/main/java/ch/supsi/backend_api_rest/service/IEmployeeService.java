@@ -19,5 +19,8 @@ public interface IEmployeeService extends ICustomerService{
     EmployeeEntity findEmployeeByUsername(String username);
     List<EmployeeEntity> findAllEmployees();
     boolean changePassword(String password);
+    
     void updateCurrentEmployee(EmployeeEntity employeeEntity);
+
+    boolean checkPassword(String newPassword);
 }

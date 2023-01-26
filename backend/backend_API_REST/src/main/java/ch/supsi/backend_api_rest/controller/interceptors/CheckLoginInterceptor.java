@@ -8,6 +8,8 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
 @Component
 public class CheckLoginInterceptor implements HandlerInterceptor {
     private final TokenService tokenService;
@@ -41,6 +43,11 @@ public class CheckLoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) {
-        return setEmployee(request.getHeader("Authorization"));
+        var result= setEmployee(request.getHeader("Authorization"));
+        if(!result)
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        return result;
     }
+
+
 }
