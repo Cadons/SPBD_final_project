@@ -1,7 +1,8 @@
 package ch.supsi.backend_api_rest.controller;
 
 import ch.supsi.backend_api_rest.model.CustomerEntity;
-import ch.supsi.backend_api_rest.service.ICustomerService;
+import ch.supsi.backend_api_rest.model.EmployeeEntity;
+import ch.supsi.backend_api_rest.security.login.ChangePasswordRequest;
 import ch.supsi.backend_api_rest.service.IEmployeeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,24 +16,26 @@ import java.util.List;
 @Component
 @RestController
 @RequestMapping("/api")
-public class RESTController {
+public class EmployeeController {
 
 
-    private static final Logger LOG = LoggerFactory.getLogger(RESTController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(EmployeeController.class);
 
 
     private final IEmployeeService employeeService;
 
     @Autowired
-    public RESTController(IEmployeeService employeeService) {
+    public EmployeeController(IEmployeeService employeeService) {
 
 
         this.employeeService = employeeService;
 
     }
 
-
-
+@GetMapping("/")
+    public ResponseEntity<String> hello(@RequestHeader("Authorization") String BearerToken) {
+        return ResponseEntity.ok("Hello "+employeeService.getCurrentEmployee().getLastname()+" "+employeeService.getCurrentEmployee().getFirstname());
+}
     @GetMapping(path = "/customers")
     public ResponseEntity<List<CustomerEntity>> getCustomers() {
 
@@ -76,5 +79,33 @@ public class RESTController {
         return response != null && response.size() > 0 ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/profile")
+    public ResponseEntity<EmployeeEntity> getMe(@RequestHeader("Authorization") String BearerToken) {
+
+        var response = employeeService.getCurrentEmployee();
+        return response != null ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/profile")
+    public ResponseEntity<EmployeeEntity> updateMe(@RequestBody EmployeeEntity employeeEntity, @RequestHeader("Authorization") String BearerToken) {
+
+        employeeService.updateCurrentEmployee(employeeEntity);
+        return employeeEntity != null ? ResponseEntity.ok(employeeEntity) : ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/profile/password")
+    public ResponseEntity<Boolean> updatePassword(@RequestBody ChangePasswordRequest password, @RequestHeader("Authorization") String BearerToken) {
+        if (password.newPassword().length() <= 0 || password.newPassword().length() < 8) {
+            return ResponseEntity.badRequest().build();
+        } else {
+
+            var response = employeeService.changePassword(password.newPassword());
+            return response ? ResponseEntity.ok(response) : ResponseEntity.badRequest().build();
+        }
+    }
+    @PostMapping("/profile/checkPassword")
+    public boolean checkPassword(@RequestBody ChangePasswordRequest password, @RequestHeader("Authorization") String BearerToken) {
+        return employeeService.checkPassword(password.newPassword());
+    }
 
 }

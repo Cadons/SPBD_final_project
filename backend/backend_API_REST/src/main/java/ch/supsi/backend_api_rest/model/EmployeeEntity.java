@@ -16,6 +16,7 @@ public class EmployeeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "employeeid")
+    @JsonIgnore
     private int employeeid;
     @Basic
     @Column(name = "lastname")
@@ -62,6 +63,7 @@ public class EmployeeEntity {
 
     @Basic
     @Column(name = "isMenager")
+    @JsonIgnore
     private boolean isMenager=false;
 
     @Basic
@@ -70,8 +72,10 @@ public class EmployeeEntity {
     private String password;
     @Basic
     @Column(name = "username",unique = true)
+    @JsonIgnore
     private String username;
     @OneToMany(mappedBy = "supportrepid")
+    @JsonIgnore
     private List<CustomerEntity> customersByEmployeeid;
 
     public int getEmployeeid() {
