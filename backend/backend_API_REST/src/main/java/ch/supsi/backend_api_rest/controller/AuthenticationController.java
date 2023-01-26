@@ -21,6 +21,7 @@ import java.time.Instant;
 
 @RestController
 @RequestMapping("/api/auth")
+
 public class AuthenticationController {
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationController.class);
 
