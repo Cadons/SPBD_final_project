@@ -79,6 +79,21 @@ public class TokenService {
         }
 
     }
+    public boolean revokeToken(String refreshToken) {
+        if (!validateToken(refreshToken)) {
+            throw new InvalidBearerTokenException("Invalid refresh token");
+        }
+
+        String username = getUsernameFromToken(refreshToken);
+        String storedRefreshToken = tokenRefreshRepository.find("jwt-refresh-token:" + username);
+        if (!storedRefreshToken.equals(refreshToken)) {
+            throw new InvalidBearerTokenException("Invalid refresh token");
+        }
+        tokenRefreshRepository.revokeToken(username);
+        tokenRefreshRepository.logoutUser(username);
+        return true;
+    }
+
     public boolean isLogged(String username)
     {
         return tokenRefreshRepository.checkIfLogged(username);
@@ -127,6 +142,12 @@ public class TokenService {
         } catch (Exception e) {
             return false;
         }
+    }
+    public int getRefreshExpiration() {
+        return REFRESH_EXPIRATION;
+    }
+    public int getTokenExpiration() {
+        return TOKEN_EXPIRATION;
     }
 
 

@@ -20,11 +20,15 @@ public class TokenRefreshRepository {
     }
     public void loginUser(String username)
     {
-        redisTemplate.opsForValue().set("logged:"+username, Instant.now().toString());
+        redisTemplate.opsForValue().set("logged:"+username, Instant.now().toString(),2, TimeUnit.MINUTES);
     }
     public void logoutUser(String username)
     {
         redisTemplate.delete("logged:"+username);
+    }
+    public void revokeToken(String username)
+    {
+        redisTemplate.delete("jwt-refresh-token:"+username);
     }
     public boolean checkIfLogged(String username)
     {

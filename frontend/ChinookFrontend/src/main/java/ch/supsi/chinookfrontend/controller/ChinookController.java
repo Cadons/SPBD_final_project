@@ -2,9 +2,11 @@ package ch.supsi.chinookfrontend.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
+@CrossOrigin
 public class ChinookController {
     @GetMapping("/")
     public String index(Model model) {
@@ -33,6 +35,6 @@ public class ChinookController {
 
     @GetMapping("/logout")
     public String logout(Model model) {
-        return "index";
+        return "logout";
     }
 }

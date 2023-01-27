@@ -87,14 +87,14 @@ public class EmployeeController {
         return response != null ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/profile")
+    @PutMapping("/profile")
     public ResponseEntity<EmployeeEntity> updateMe(@RequestBody EmployeeEntity employeeEntity, @RequestHeader("Authorization") String BearerToken) {
 
         employeeService.updateCurrentEmployee(employeeEntity);
         return employeeEntity != null ? ResponseEntity.ok(employeeEntity) : ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/profile/password")
+    @PutMapping("/profile/password")
     public ResponseEntity<Boolean> updatePassword(@RequestBody ChangePasswordRequest password, @RequestHeader("Authorization") String BearerToken) {
         if (password.newPassword().length() <= 0 || password.newPassword().length() < 8) {
             return ResponseEntity.badRequest().build();

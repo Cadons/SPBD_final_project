@@ -2,13 +2,17 @@ package ch.supsi.backend_api_rest.controller;
 
 import ch.supsi.backend_api_rest.exceptions.UnauthorizedOperation;
 import ch.supsi.backend_api_rest.security.jwt.AuthResponse;
+import ch.supsi.backend_api_rest.security.jwt.LoginResponse;
 import ch.supsi.backend_api_rest.security.jwt.RequestRefresh;
 import ch.supsi.backend_api_rest.security.jwt.TokenService;
 import ch.supsi.backend_api_rest.security.login.LoginRequest;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,7 +39,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> token(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> token(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
 
         if (loginRequest.username() == null || loginRequest.password() == null) {
             return ResponseEntity.badRequest().build();
@@ -51,19 +55,55 @@ public class AuthenticationController {
             var token = tokenService.generateToken(authentication);
             LOG.trace("Token granted");
             LOG.trace("User: " + loginRequest.username() + " logged in");
-            return new ResponseEntity<>(token, HttpStatus.OK);
+            //store token and refreshtoken in cookie
+            HttpHeaders responseHeaders = new HttpHeaders();
+
+            //expires in 10 minutes
+            var refreshToken = setRefreshTokenCookie(token.refreshToken());
+            String cookie = refreshToken.getName()+"=" + refreshToken.getValue() + "; "+(refreshToken.isHttpOnly()?"HttpOnly;":"")+ "; "+(refreshToken.getSecure()?"Secure;":"")+ "; Path="+refreshToken.getPath()+"; Max-Age=" + refreshToken.getMaxAge()+ refreshToken.getMaxAge()+"; SameSite="+refreshToken.getAttribute("SameSite");;
+            responseHeaders.add("Set-Cookie",cookie);
+
+            return new ResponseEntity<>(new LoginResponse(token.token(), token.username()), responseHeaders, HttpStatus.OK);
         } else {
-            return ResponseEntity.ok().build();
+            //get request cookies
+
+            var cookies = request.getCookies();
+            if(cookies==null)
+            {
+                return ResponseEntity.badRequest().build();
+            }
+            var header = new HttpHeaders();
+            //add all cookies to header
+            for (var cookie : cookies) {
+                if(cookie.getValue()!=null)
+                header.add("Cookie", cookie.getName() + "=" + cookie.getValue());
+            }
+            return refreshToken(header);
         }
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<AuthResponse> logout(@RequestHeader("Authorization") String BearerToken) {
+    public ResponseEntity<AuthResponse> logout(HttpServletRequest request) {
         try {
-            BearerToken = BearerToken.replace("Bearer ", "");
-            if (tokenService.revokeUser(tokenService.getUsernameFromToken(BearerToken))) {
+            //get refresh token from cookie
+            var BearerToken = request.getHeader("Cookie");
+
+            if (BearerToken == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            BearerToken = BearerToken.replace("refreshToken=", "");
+            BearerToken = BearerToken.replace("; HttpOnly; SameSite=Strict;Path=/", "");
+
+            if ( tokenService.revokeToken(BearerToken)) {
                 LOG.trace("User: " + tokenService.getUsernameFromToken(BearerToken) + " logged out");
-                return ResponseEntity.ok().build();
+                //delete token and refreshtoken in cookie
+                HttpHeaders responseHeaders = new HttpHeaders();
+                var refreshToken = setRefreshTokenCookie("");
+                String cookie = refreshToken.getName()+"=" + refreshToken.getValue() + "; "+(refreshToken.isHttpOnly()?"HttpOnly;":"")+ "; "+(refreshToken.getSecure()?"Secure;":"")+ ";Path="+refreshToken.getPath()+"; Max-Age=" + Instant.now()+ refreshToken.getMaxAge()+"; SameSite="+refreshToken.getAttribute("SameSite");;
+                responseHeaders.add("Set-Cookie",cookie);
+
+                return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
+
             } else {
                 return ResponseEntity.badRequest().build();
             }
@@ -72,13 +112,23 @@ public class AuthenticationController {
         }
     }
 
-    @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refreshToken(@RequestBody RequestRefresh BearerToken) {
 
-        var username = tokenService.getUsernameFromToken(BearerToken.refresh().replace("Bearer ", ""));
+    public ResponseEntity<LoginResponse> refreshToken(HttpHeaders headers) {
+
+        //get refresh token from cookie
+        var BearerToken = headers.get("Cookie").get(0);
+        BearerToken = BearerToken.replace("refreshToken=", "");
+        BearerToken = BearerToken.replace("; HttpOnly; SameSite=Strict;Path=/", "");
+        if ( !tokenService.validateToken(BearerToken))
+            return ResponseEntity.badRequest().build();
+
+
+        var username = tokenService.getUsernameFromToken(BearerToken);
 
         LOG.trace("User: " + username + " requested refresh");
-        return getAuthResponseResponseEntity(BearerToken.refresh());
+        var token = getAuthResponseResponseEntity(BearerToken);
+
+        return new ResponseEntity<>(new LoginResponse(token.getBody().token(), token.getBody().username()), HttpStatus.OK);
     }
 
     @NotNull
@@ -90,12 +140,21 @@ public class AuthenticationController {
             return ResponseEntity.ok(newToken);
         } catch (InvalidBearerTokenException e) {
             return ResponseEntity.badRequest().build();
-        }
-        catch (UnauthorizedOperation e){
+        } catch (UnauthorizedOperation e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
 
+    }
+    private Cookie setRefreshTokenCookie(String refreshToken)
+    {
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(tokenService.getRefreshExpiration()*60);
+        cookie.setSecure(true);
+        cookie.setAttribute("SameSite", "None");
+        return cookie;
     }
 
 }
