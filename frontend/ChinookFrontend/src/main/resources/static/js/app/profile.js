@@ -49,6 +49,27 @@ class ProfileForm extends React.Component {
 
 
     }
+    componentDidMount() {
+        //check if user is logged in
+        fetch('http://127.0.0.1:7000/api/', {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem('token')
+            },
+            method: 'GET',
+            type: 'json',
+            credentials: 'include'
+
+        }).then(response => {
+            if (response.status === 200) {
+                console.log("User is logged in");
+            } else {
+                console.log("User is not logged in");
+                window.location.href = "/logout";
+            }
+        });
+
+    }
 
     handleSubmit(e) {
         e.preventDefault();
@@ -67,22 +88,59 @@ class ProfileForm extends React.Component {
             title: this.state.job,
             address: this.state.address
         }
-        fetch('http://127.0.0.1:7000/api/profile', {
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem('token')
-            },
-            method: 'PUT',
-            body: JSON.stringify(profile),
-            type: 'json',
-            credentials: 'include'
-        }).then(response => {
-            if (response.status === 200) {
-                alert("Profile updated");
-            } else {
-                alert("Error");
+        Swal.fire({
+            title: 'Do you want to save the changes?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#102E44',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirm'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if(profile.birthdate === null || profile.birthdate === undefined || profile.birthdate === ''||new Date(profile.birthdate)>new Date()||new Date(profile.birthdate)<new Date(1900,1,1)){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Birthdate is invalid',
+                        confirmButtonColor: '#102E44',
+                    })
+                }else{
+
+
+                fetch('http://127.0.0.1:7000/api/profile', {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem('token')
+                    },
+                    method: 'PUT',
+                    body: JSON.stringify(profile),
+                    type: 'json',
+                    credentials: 'include'
+                }).then(response => {
+                    if (response.status === 200) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Operation Successful',
+                            text: 'Account updated successfully',
+                            confirmButtonColor: '#102E44',
+
+
+                        })
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong',
+                            confirmButtonColor: '#102E44',
+
+
+                        })
+                    }
+                });
+                }
             }
-        });
+        })
 
 
     }
@@ -136,6 +194,7 @@ class ProfileForm extends React.Component {
     handleBirthDateChange(e) {
         this.setState({birthDate: e.target.value});
     }
+
     handleJobChange(e) {
         this.setState({job: e.target.value});
     }
@@ -164,7 +223,8 @@ class ProfileForm extends React.Component {
 
                     <div className="form-group">
                         <label htmlFor="job">Job Title</label>
-                        <input type="text" className="form-control" id="job" value={this.state.job} onChange={this.handleJobChange} placeholder="Job Title"/>
+                        <input type="text" className="form-control" id="job" value={this.state.job}
+                               onChange={this.handleJobChange} placeholder="Job Title"/>
                     </div>
 
                     <div className="form-group">
@@ -215,7 +275,7 @@ class ProfileForm extends React.Component {
                     </div>
 
 
-                    <button type="submit" className="btn btn-primary">Submit</button>
+                    <button type="submit"  className="btn btn-primary col-12">Update</button>
                 </form>
             </div>
         );

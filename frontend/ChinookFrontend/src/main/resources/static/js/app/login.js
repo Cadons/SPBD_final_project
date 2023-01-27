@@ -33,10 +33,7 @@ class Login extends React.Component {
                 console.log("Login successful");
                 response.json().then(data => {
 
-                    /**
-                     * Could be used to store the token in a cookie instead of local storage
-                     * XSS attacks are possible with local storage more easily than with cookies
-                     * */
+
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('username', data.username);
 
@@ -44,7 +41,15 @@ class Login extends React.Component {
 
                 window.location.href = "/customers";
             } else {
-                console.log("Login failed");
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Check your credentials and try again!',
+                    confirmButtonColor: '#102E44',
+
+
+                })
             }
         });
     }
