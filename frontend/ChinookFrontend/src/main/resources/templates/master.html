@@ -11,6 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link th:href="@{/css/styles.css}" rel="stylesheet" />
     <link th:href="@{/css/customer.css}" rel="stylesheet" type="text/css">
+    <script th:src="@{/js/sweetalert2.js}"></script>
 </head>
 <body>
 <div class="d-flex" id="wrapper">
@@ -21,6 +22,7 @@
         <h4 class="list-group-item-light p-3">Dashboard</h4>
         <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/customers}">Customers</a>
         <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/profile}">Profile</a>
+        <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/changePassword}">Edit Password</a>
         <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/logout}">Logout</a>
     </div>
 </div>
