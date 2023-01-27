@@ -12,28 +12,7 @@ class ChangePassword extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    //mounting
-    componentDidMount() {
-        //check if user is logged in
-        fetch('http://127.0.0.1:7000/api/', {
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem('token')
-            },
-            method: 'GET',
-            type: 'json',
-            credentials: 'include'
 
-        }).then(response => {
-            if (response.status === 200) {
-                console.log("User is logged in");
-            } else {
-                console.log("User is not logged in");
-                window.location.href = "/logout";
-            }
-        });
-
-    }
 
     handleOldPasswordChange(e) {
         this.setState({oldPassword: e.target.value});
@@ -51,9 +30,42 @@ class ChangePassword extends React.Component {
         e.preventDefault();
         //check if password is almoost 6 characters long minimum and 14 characters maximum, and if it contains at least one number and one letter lower and upper and one special character, password must have almost 3 of the 4 conditions
         var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,14})/;
-        if (regex.test(this.state.newPassword)) {
 
-            if ((this.state.newPassword === this.state.confirmPassword) && (this.state.newPassword !== this.state.oldPassword) && (this.state.newPassword !== '')) {
+        if (regex.test(this.state.newPassword)) {
+            if (this.state.newPassword !== this.state.confirmPassword) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Passwords do not match!',
+                    confirmButtonColor: '#102E44',
+                })
+            }else if(this.state.newPassword !== this.state.confirmPassword){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Passwords do not match!',
+                    confirmButtonColor: '#102E44',
+                })
+            }
+            else if (this.state.newPassword === this.state.oldPassword) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'New password must be different from old password!',
+                    confirmButtonColor: '#102E44',
+                })
+            }
+            else if (this.state.newPassword === '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'New password must not be empty!',
+                    confirmButtonColor: '#102E44',
+                })
+            }
+            else {
+
+
                 var data = {
                     oldPassword: this.state.oldPassword,
                     newPassword: this.state.newPassword
@@ -81,20 +93,12 @@ class ChangePassword extends React.Component {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops...',
-                                text: 'Something went wrong!',
+                                text: 'New password must be different from old password!',
                                 confirmButtonColor: '#102E44',
                             })
                         }
                     }
                 )
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Passwords do not match!',
-                    confirmButtonColor: '#102E44',
-                })
-
             }
 
         } else {
@@ -160,4 +164,5 @@ class ChangePassword extends React.Component {
 }
 
 const domContainer = document.querySelector('#changePassword_form_container');
-ReactDOM.render(React.createElement(ChangePassword), domContainer);
+var root=ReactDOM.createRoot(domContainer);
+root.render(<ChangePassword/>);

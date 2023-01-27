@@ -11,6 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link th:href="@{/css/styles.css}" rel="stylesheet" />
     <link th:href="@{/css/customer.css}" rel="stylesheet" type="text/css">
+
     <script th:src="@{/js/sweetalert2.js}"></script>
 </head>
 <body>
@@ -20,6 +21,7 @@
     <div class="sidebar-heading border-bottom blueColor"><img  class="sideBarLogo" th:src="@{/img/sidebarLogo.png}"></div>
     <div class="list-group list-group-flush">
         <h4 class="list-group-item-light p-3">Dashboard</h4>
+        <h5 class="list-group-item-light p-3" id="greet"></h5>
         <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/customers}">Customers</a>
         <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/profile}">Profile</a>
         <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/changePassword}">Edit Password</a>
@@ -64,6 +66,7 @@
 <script th:src="@{/js/react/react.development.js}"></script>
 <script th:src="@{/js/react/react-dom.development.js}"></script>
 <script th:src="@{/js/react/babel.min.js}"></script>
+<script th:src="@{/js/app/security.js}"></script>
 <blockquote th:replace="${script}"></blockquote>
 
 
