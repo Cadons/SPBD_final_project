@@ -38,7 +38,7 @@ class ProfileForm extends React.Component {
         this.state.birthDate = profile.birthdate;
         this.state.hireDate = profile.hiredate;
         this.state.job = profile.title;
-
+        this.state.role = profile.menager ? 'Manager' : 'Employee';
 
         //formate date
         var date = new Date(profile.birthdate);
@@ -49,27 +49,7 @@ class ProfileForm extends React.Component {
 
 
     }
-    componentDidMount() {
-        //check if user is logged in
-        fetch('http://127.0.0.1:7000/api/', {
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem('token')
-            },
-            method: 'GET',
-            type: 'json',
-            credentials: 'include'
 
-        }).then(response => {
-            if (response.status === 200) {
-                console.log("User is logged in");
-            } else {
-                console.log("User is not logged in");
-                window.location.href = "/logout";
-            }
-        });
-
-    }
 
     handleSubmit(e) {
         e.preventDefault();
@@ -98,46 +78,46 @@ class ProfileForm extends React.Component {
             confirmButtonText: 'Confirm'
         }).then((result) => {
             if (result.isConfirmed) {
-                if(profile.birthdate === null || profile.birthdate === undefined || profile.birthdate === ''||new Date(profile.birthdate)>new Date()||new Date(profile.birthdate)<new Date(1900,1,1)){
+                if (profile.birthdate === null || profile.birthdate === undefined || profile.birthdate === '' || new Date(profile.birthdate) > new Date() || new Date(profile.birthdate) < new Date(1900, 1, 1)) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
                         text: 'Birthdate is invalid',
                         confirmButtonColor: '#102E44',
                     })
-                }else{
+                } else {
 
 
-                fetch('http://127.0.0.1:7000/api/profile', {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + localStorage.getItem('token')
-                    },
-                    method: 'PUT',
-                    body: JSON.stringify(profile),
-                    type: 'json',
-                    credentials: 'include'
-                }).then(response => {
-                    if (response.status === 200) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Operation Successful',
-                            text: 'Account updated successfully',
-                            confirmButtonColor: '#102E44',
+                    fetch('http://127.0.0.1:7000/api/profile', {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": "Bearer " + localStorage.getItem('token')
+                        },
+                        method: 'PUT',
+                        body: JSON.stringify(profile),
+                        type: 'json',
+                        credentials: 'include'
+                    }).then(response => {
+                        if (response.status === 200) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Operation Successful',
+                                text: 'Account updated successfully',
+                                confirmButtonColor: '#102E44',
 
 
-                        })
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Something went wrong',
-                            confirmButtonColor: '#102E44',
+                            })
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Something went wrong',
+                                confirmButtonColor: '#102E44',
 
 
-                        })
-                    }
-                });
+                            })
+                        }
+                    });
                 }
             }
         })
@@ -273,9 +253,16 @@ class ProfileForm extends React.Component {
                         <input type="date" className="form-control" id="hiredate" placeholder="Hiredate"
                                value={this.state.hireDate} readOnly={true}/>
                     </div>
+                    <div className="form-group">
+                        <label htmlFor="role">Role</label>
+
+                        <input type="text" className="form-control" id="role" readOnly={true} placeholder="Role"
+                               value={this.state.role}/>
 
 
-                    <button type="submit"  className="btn btn-primary col-12">Update</button>
+                    </div>
+
+                    <button type="submit" className="btn btn-primary col-12">Update</button>
                 </form>
             </div>
         );
