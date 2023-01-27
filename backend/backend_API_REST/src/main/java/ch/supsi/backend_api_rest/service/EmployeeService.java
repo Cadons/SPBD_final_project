@@ -180,9 +180,8 @@ public class EmployeeService implements IEmployeeService {
         currentEmployee.setFax(employeeEntity.getFax());
         currentEmployee.setEmail(employeeEntity.getEmail());
         currentEmployee.setTitle(employeeEntity.getTitle());
-        currentEmployee.setReportsto(employeeEntity.getReportsto());
         currentEmployee.setBirthdate(employeeEntity.getBirthdate());
-        currentEmployee.setHiredate(employeeEntity.getHiredate());
+
 
 
         employeeRepository.save(currentEmployee);

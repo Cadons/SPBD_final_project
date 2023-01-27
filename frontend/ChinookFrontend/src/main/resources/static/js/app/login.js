@@ -13,27 +13,53 @@ class Login extends React.Component {
     handleSubmit(e) {
 
         e.preventDefault();
-        const data = new FormData();
-        data.append('username', this.state.username);
-        data.append('password', this.state.password);
+
+        var credentials = {
+            username: this.state.username,
+            password: this.state.password
+        }
 
 
         fetch('http://127.0.0.1:7000/api/auth/login', {
+            headers: {
+                "Content-Type": "application/json"
+            },
             method: 'POST',
-            body: data,
+            body: JSON.stringify(credentials),
+            type: 'json',
+            credentials: 'include'
+        }).then(response => {
+            if (response.status === 200) {
+                console.log("Login successful");
+                response.json().then(data => {
+
+                    /**
+                     * Could be used to store the token in a cookie instead of local storage
+                     * XSS attacks are possible with local storage more easily than with cookies
+                     * */
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('username', data.username);
+
+                });
+
+                window.location.href = "/customers";
+            } else {
+                console.log("Login failed");
+            }
         });
     }
+
     handleUsernameChange(e) {
         this.setState({username: e.target.value});
 
     }
+
     handlePasswordChange(e) {
         this.setState({password: e.target.value});
     }
 
     render() {
         return (
-
 
 
             <div>
@@ -47,14 +73,16 @@ class Login extends React.Component {
 
                     <div className="form-outline mb-4">
                         <label className="form-label" htmlFor="form2Example17">Username</label>
-                        <input type="text" value={this.state.username} onChange={this.handleUsernameChange} id="form2Example17" className="form-control form-control-lg"/>
+                        <input type="text" value={this.state.username} onChange={this.handleUsernameChange}
+                               id="form2Example17" className="form-control form-control-lg"/>
 
                     </div>
 
                     <div className="form-outline mb-4">
 
                         <label className="form-label" htmlFor="form2Example27">Password</label>
-                        <input type="password" id="form2Example27" onChange={this.handlePasswordChange} value={this.state.password} className="form-control form-control-lg"/>
+                        <input type="password" id="form2Example27" onChange={this.handlePasswordChange}
+                               value={this.state.password} className="form-control form-control-lg"/>
                     </div>
 
                     <div className="pt-1 mb-4">

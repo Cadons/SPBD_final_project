@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="masterLayout(title, main)">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:fragment="masterLayout(title, main, script)">
 <head>
 
     <title th:include="${title}">Title</title>
@@ -10,6 +10,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link th:href="@{/css/styles.css}" rel="stylesheet" />
+    <link th:href="@{/css/customer.css}" rel="stylesheet" type="text/css">
 </head>
 <body>
 <div class="d-flex" id="wrapper">
@@ -33,9 +34,9 @@
         </div>
     </nav>
     <!-- Page content-->
-    <div class="container-fluid">
+    <div class="container-fluid" >
         <h1 class="mt-4" th:include="${title}">Title</h1>
-        <div th:include="${main}">
+        <div th:include="${main}" id="pageContent">
             <p>The starting state of the menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will change.</p>
             <p>
                 Make sure to keep all page content within the
@@ -60,6 +61,8 @@
 <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
 <script th:src="@{/js/react/react.development.js}"></script>
 <script th:src="@{/js/react/react-dom.development.js}"></script>
+<script th:src="@{/js/react/babel.min.js}"></script>
+<blockquote th:replace="${script}"></blockquote>
 
 
 </body>
