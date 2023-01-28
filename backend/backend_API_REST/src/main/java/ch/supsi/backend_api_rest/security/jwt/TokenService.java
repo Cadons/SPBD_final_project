@@ -3,7 +3,6 @@ package ch.supsi.backend_api_rest.security.jwt;
 import ch.supsi.backend_api_rest.exceptions.UnauthorizedOperation;
 import ch.supsi.backend_api_rest.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -81,9 +80,7 @@ public class TokenService {
     }
 
     public boolean revokeToken(String refreshToken) {
-        if (!validateToken(refreshToken)) {
-            throw new InvalidBearerTokenException("Invalid refresh token");
-        }
+
 
         String username = getUsernameFromToken(refreshToken);
         String storedRefreshToken = tokenRefreshRepository.find("jwt-refresh-token:" + username);

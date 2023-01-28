@@ -88,7 +88,7 @@ class ProfileForm extends React.Component {
                 } else {
 
 
-                    fetch('http://127.0.0.1:7000/api/profile', {
+                    fetch(url+'/api/profile', {
                         headers: {
                             "Content-Type": "application/json",
                             "Authorization": "Bearer " + localStorage.getItem('token')
@@ -120,10 +120,18 @@ class ProfileForm extends React.Component {
                     });
                 }
             }
+        }).catch(error => {
+            swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Application error!, please contact the administrator',
+                confirmButtonColor: '#102E44',
+
+            })
         })
 
 
-    }
+        }
 
     handleFirstNameChange(e) {
         this.setState({firstName: e.target.value});
@@ -270,7 +278,7 @@ class ProfileForm extends React.Component {
 }
 
 var profile;
-fetch('http://127.0.0.1:7000/api/profile', {
+fetch(url+'/api/profile', {
     headers: {
         "Content-Type": "application/json"
         , "Authorization": "Bearer " + localStorage.getItem('token')

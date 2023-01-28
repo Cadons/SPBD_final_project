@@ -3,7 +3,6 @@ package ch.supsi.backend_api_rest.controller;
 import ch.supsi.backend_api_rest.exceptions.UnauthorizedOperation;
 import ch.supsi.backend_api_rest.security.jwt.AuthResponse;
 import ch.supsi.backend_api_rest.security.jwt.LoginResponse;
-import ch.supsi.backend_api_rest.security.jwt.RequestRefresh;
 import ch.supsi.backend_api_rest.security.jwt.TokenService;
 import ch.supsi.backend_api_rest.security.login.LoginRequest;
 import jakarta.servlet.http.Cookie;
@@ -13,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,8 +20,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
 import java.util.Arrays;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -82,6 +80,7 @@ public class AuthenticationController {
                 if (cookie.getValue() != null)
                     header.add("Cookie", cookie.getName() + "=" + cookie.getValue());
             }
+
             return refreshToken(request);
         }
     }
@@ -90,7 +89,7 @@ public class AuthenticationController {
     public ResponseEntity<AuthResponse> logout(HttpServletRequest request) {
         try {
             //get refresh token from cookie
-            var BearerToken = request.getHeader("Cookie");
+            var BearerToken = request.getHeader("Cookie").split(";")[0];
 
             if (BearerToken == null) {
                 return ResponseEntity.badRequest().build();
@@ -139,7 +138,7 @@ public class AuthenticationController {
         LOG.trace("User: " + username + " requested refresh");
         var token = getAuthResponseResponseEntity(BearerToken);
 
-        return new ResponseEntity<>(new LoginResponse(token.getBody().token(), token.getBody().username(),token.getBody().role()), HttpStatus.OK);
+        return new ResponseEntity<>(new LoginResponse(Objects.requireNonNull(token.getBody()).token(), token.getBody().username(),token.getBody().role()), HttpStatus.OK);
     }
 
     @NotNull

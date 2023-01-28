@@ -1,0 +1,1 @@
+const url="http://api."+location.hostname+":7000"

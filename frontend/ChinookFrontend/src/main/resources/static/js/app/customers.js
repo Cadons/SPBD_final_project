@@ -14,7 +14,7 @@ class Customers extends React.Component {
 
     componentDidMount() {
 
-        fetch('http://127.0.0.1:7000/api/customers', {
+        fetch(url+'/api/customers', {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + localStorage.getItem('token')
@@ -38,7 +38,15 @@ class Customers extends React.Component {
                     }
                 }
             }
-        );
+        ).catch(error => {
+            swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Application error!, please contact the administrator',
+                confirmButtonColor: '#102E44',
+
+            })
+        })
 
 
     }
@@ -128,7 +136,7 @@ class Filter extends React.Component {
 
     handleSearch(e) {
         e.preventDefault();
-        fetch('http://127.0.0.1:7000/api/customers/' + this.state.filter.toLocaleLowerCase() + '/' + this.state.targetTxt, {
+        fetch(url+'/api/customers/' + this.state.filter.toLocaleLowerCase() + '/' + this.state.targetTxt, {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer " + localStorage.getItem('token')

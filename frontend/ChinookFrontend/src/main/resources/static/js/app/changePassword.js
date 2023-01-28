@@ -72,7 +72,7 @@ class ChangePassword extends React.Component {
                     oldPassword: this.state.oldPassword,
                     newPassword: this.state.newPassword
                 }
-                fetch('http://127.0.0.1:7000/api/profile/password', {
+                fetch(url+'/api/profile/password', {
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": "Bearer " + localStorage.getItem('token')
@@ -100,7 +100,15 @@ class ChangePassword extends React.Component {
                             })
                         }
                     }
-                )
+                ).catch(error => {
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Application error!, please contact the administrator',
+                        confirmButtonColor: '#102E44',
+
+                    })
+                })
             }
 
         } else {

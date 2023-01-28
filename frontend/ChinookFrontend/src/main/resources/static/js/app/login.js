@@ -1,3 +1,4 @@
+
 class Login extends React.Component {
     constructor(props) {
         super(props);
@@ -20,7 +21,7 @@ class Login extends React.Component {
         }
 
 
-        fetch('http://127.0.0.1:7000/api/auth/login', {
+        fetch(url+'/api/auth/login', {
             headers: {
                 "Content-Type": "application/json"
             },
@@ -52,6 +53,14 @@ class Login extends React.Component {
 
                 })
             }
+        }).catch(error => {
+            swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Application error!, please contact the administrator',
+                confirmButtonColor: '#102E44',
+
+            })
         });
     }
 
@@ -92,7 +101,7 @@ class Login extends React.Component {
                     </div>
 
                     <div className="pt-1 mb-4">
-                        <button className="btn btn-dark btn-lg btn-block" id="loginBtn" type="submit">Login</button>
+                        <button className="btn btn-dark w-100 btn-lg btn-block" id="loginBtn" type="submit">Login</button>
                     </div>
                 </form>
             </div>
@@ -100,7 +109,16 @@ class Login extends React.Component {
         );
     }
 }
-
+//check if url has parameter kickout
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.has('kickout')) {
+    Swal.fire({
+        icon: 'warning',
+        title: 'ZZZZ...',
+        text: 'You have been logged out for inactivity!',
+        confirmButtonColor: '#102E44',
+    })
+}
 const domContainer = document.querySelector('#login_container');
 const root = ReactDOM.createRoot(domContainer);
 root.render(<Login/>);

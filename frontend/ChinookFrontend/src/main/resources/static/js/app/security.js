@@ -1,7 +1,7 @@
 
 async function refreshToken() {
     if (localStorage.getItem('role') !== "ROLE_MANAGER") {
-        fetch('http://127.0.0.1:7000/api/auth/refresh', {
+        fetch(url+'/api/auth/refresh', {
             headers: {
                 "Content-Type": "application/json",
             },
@@ -33,7 +33,7 @@ async function refreshToken() {
 var toggle = false;
 function checkLogin() {
 
-    fetch('http://127.0.0.1:7000/api/', {
+    fetch(url+'/api/', {
         headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + localStorage.getItem('token')
@@ -65,8 +65,16 @@ function checkLogin() {
 
         }else{
             console.log("User is not logged in");
-          window.location.href = "/logout";
+          window.location.href = "/logout?kickout";
         }
+    }).catch(error => {
+        swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Application error!, please contact the administrator',
+            confirmButtonColor: '#102E44',
+
+        }) ;
     });
 }
 checkLogin();
