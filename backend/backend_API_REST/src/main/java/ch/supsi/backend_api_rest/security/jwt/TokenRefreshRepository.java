@@ -22,6 +22,11 @@ public class TokenRefreshRepository {
     {
         redisTemplate.opsForValue().set("logged:"+username, Instant.now().toString(),2, TimeUnit.MINUTES);
     }
+    public void updateSession(String username)
+    {
+        redisTemplate.expire("logged:"+username,2, TimeUnit.MINUTES);
+
+    }
     public void logoutUser(String username)
     {
         redisTemplate.delete("logged:"+username);

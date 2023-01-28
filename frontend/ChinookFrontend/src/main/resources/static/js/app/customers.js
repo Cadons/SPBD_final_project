@@ -14,7 +14,6 @@ class Customers extends React.Component {
 
     componentDidMount() {
 
-
         fetch('http://127.0.0.1:7000/api/customers', {
             headers: {
                 "Content-Type": "application/json",
@@ -23,17 +22,23 @@ class Customers extends React.Component {
             method: 'GET',
             credentials: 'include'
         }).then(response => {
-            if (response.status === 200) {
-                response.json().then(data => {
-                        this.setState({customers: data});
+                if (response.status === 200) {
+                    response.json().then(data => {
+                            this.setState({customers: data});
 
 
+                        }
+                    );
+                }else{
+                    if(response.status !== 404) {
+                        //set wait time to 2 seconds
+                        setTimeout(() => {
+                            this.componentDidMount();
+                        }, 2000);
                     }
-                );
-            } else if (response.status === 401) {
-                window.location.href = "/";
+                }
             }
-        });
+        );
 
 
     }

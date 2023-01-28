@@ -66,19 +66,20 @@ public class TokenService {
         //store on redis
         tokenRefreshRepository.save(refreshToken, "jwt-refresh-token:" + authentication.getName(), REFRESH_EXPIRATION, TimeUnit.MINUTES);
         tokenRefreshRepository.loginUser(authentication.getName());
-        return new AuthResponse(token, authentication.getName(), refreshToken, "Bearer");
+        String role = employeeRepository.findByUsername(authentication.getName()).get().isMenager() ? "ROLE_MENAGER" : "ROLE_EMPLOYEE";
+        return new AuthResponse(token, authentication.getName(), role, refreshToken, "Bearer");
     }
-    public boolean revokeUser(String username)
-    {
-        if(tokenRefreshRepository.checkIfLogged(username))
-        {
+
+    public boolean revokeUser(String username) {
+        if (tokenRefreshRepository.checkIfLogged(username)) {
             tokenRefreshRepository.logoutUser(username);
             return true;
-        }else{
+        } else {
             return false;
         }
 
     }
+
     public boolean revokeToken(String refreshToken) {
         if (!validateToken(refreshToken)) {
             throw new InvalidBearerTokenException("Invalid refresh token");
@@ -94,10 +95,17 @@ public class TokenService {
         return true;
     }
 
-    public boolean isLogged(String username)
-    {
+    public boolean isLogged(String username) {
         return tokenRefreshRepository.checkIfLogged(username);
 
+    }
+
+    public boolean isMenager(String token) {
+
+        String username = getUsernameFromToken(token);
+        if (username == null)
+            return false;
+        return employeeRepository.findByUsername(username).get().isMenager();
     }
 
     public AuthResponse refreshToken(String refreshToken) throws UnauthorizedOperation {
@@ -106,9 +114,8 @@ public class TokenService {
         }
 
         String username = getUsernameFromToken(refreshToken);
-        if(!employeeRepository.findByUsername(username).get().isMenager())
-        {
-                throw new UnauthorizedOperation("You are not a menager and you can't refresh your token");
+        if (!isMenager(refreshToken)) {
+            throw new UnauthorizedOperation("You are not a menager and you can't refresh your token");
         }
         String storedRefreshToken = tokenRefreshRepository.find("jwt-refresh-token:" + username);
         if (!storedRefreshToken.equals(refreshToken)) {
@@ -124,7 +131,8 @@ public class TokenService {
                 .claim("scope", "")
                 .build();
         var token = this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-        return new AuthResponse(token, username, refreshToken, "Bearer");
+        String role = employeeRepository.findByUsername(username).get().isMenager() ? "ROLE_MENAGER" : "ROLE_EMPLOYEE";
+        return new AuthResponse(token, username, role, refreshToken, "Bearer");
     }
 
     public String getUsernameFromToken(String token) {
@@ -132,9 +140,13 @@ public class TokenService {
         return decoder.decode(token).getSubject();
     }
 
+    public void updateSession(String username) {
+        tokenRefreshRepository.updateSession(username);
+    }
+
     public boolean validateToken(String token) {
         try {
-            System.out.println(decoder.decode(token).getExpiresAt());
+
             if (Objects.requireNonNull(decoder.decode(token).getExpiresAt()).isBefore(Instant.now())) {
                 return false;
             }
@@ -143,9 +155,11 @@ public class TokenService {
             return false;
         }
     }
+
     public int getRefreshExpiration() {
         return REFRESH_EXPIRATION;
     }
+
     public int getTokenExpiration() {
         return TOKEN_EXPIRATION;
     }

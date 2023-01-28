@@ -1,7 +1,9 @@
 package ch.supsi.backend_api_rest.controller.interceptors;
 
+import ch.supsi.backend_api_rest.controller.AuthenticationController;
 import ch.supsi.backend_api_rest.security.jwt.TokenService;
 import ch.supsi.backend_api_rest.service.IEmployeeService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jetbrains.annotations.NotNull;
@@ -14,39 +16,65 @@ import org.springframework.web.servlet.ModelAndView;
 public class CheckLoginInterceptor implements HandlerInterceptor {
     private final TokenService tokenService;
     private final IEmployeeService employeeService;
-
+enum Status{
+    AUTHORIZED, UNAUTHORIZED, REFRESH
+}
     @Autowired
     public CheckLoginInterceptor(TokenService tokenService, IEmployeeService employeeService) {
         this.tokenService = tokenService;
         this.employeeService = employeeService;
     }
 
-    private boolean setEmployee(String token) {
+    private Status setEmployee(String token) {
         if (token == null || token.isEmpty())
-            return false;
+            return Status.UNAUTHORIZED;
         token = token.replace("Bearer ", "");
         //check if token is valid
+        String username = tokenService.getUsernameFromToken(token);
 
-        if (tokenService.isLogged(tokenService.getUsernameFromToken(token))) {
-            if(tokenService.validateToken(token)) {
-                employeeService.setCurrentEmployee(employeeService.findEmployeeByUsername(tokenService.getUsernameFromToken(token)));
-                return true;
-            }else{
-                tokenService.revokeUser(tokenService.getUsernameFromToken(token));
+        if (tokenService.isLogged(username)) {
+            tokenService.updateSession(username);
+            if (tokenService.validateToken(token)) {
+                employeeService.setCurrentEmployee(employeeService.findEmployeeByUsername(username));
+                return Status.AUTHORIZED;
+            }
+            if (tokenService.isMenager(token)) {
+
+                return Status.REFRESH;
             }
         }
-            return false;
 
 
+                tokenService.revokeUser(username);
+                return Status.UNAUTHORIZED;
 
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) {
-        var result= setEmployee(request.getHeader("Authorization"));
-        if(!result)
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        return result;
+        //get token from cookie
+        var cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("Authorization")) {
+                    request.setAttribute("Authorization", cookie.getValue());
+                }
+            }
+        }
+
+        var result = setEmployee(request.getHeader("Authorization"));
+        if (result == Status.UNAUTHORIZED) {
+            response.setStatus(401);
+            return false;
+        }
+        else if (result == Status.REFRESH) {
+            response.setStatus(403);
+            return false;
+        }
+        else {
+            return true;
+        }
+
     }
 
 
