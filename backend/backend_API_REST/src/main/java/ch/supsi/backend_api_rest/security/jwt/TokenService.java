@@ -24,7 +24,7 @@ public class TokenService {
 
 
     private final TokenRefreshRepository tokenRefreshRepository;
-    private final int TOKEN_EXPIRATION = 2;
+    private final int TOKEN_EXPIRATION = 5;
     private final int REFRESH_EXPIRATION = 10;
     private final JwtEncoder encoder;
     private final JwtDecoder decoder;

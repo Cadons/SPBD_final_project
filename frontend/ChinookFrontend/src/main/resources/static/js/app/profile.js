@@ -53,7 +53,7 @@ class ProfileForm extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
-
+        checkLogin();
         var profile = {
             firstname: this.state.firstName,
             lastname: this.state.lastName,

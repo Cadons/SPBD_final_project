@@ -27,7 +27,9 @@ class ChangePassword extends React.Component {
     }
 
     handleSubmit(e) {
+
         e.preventDefault();
+        checkLogin();
         //check if password is almoost 6 characters long minimum and 14 characters maximum, and if it contains at least one number and one letter lower and upper and one special character, password must have almost 3 of the 4 conditions
         var regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{6,14})/;
 
