@@ -11,9 +11,23 @@
             <maxHistory>30</maxHistory>
         </rollingPolicy>
     </appender>
+    <appender name="FILE2" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/profile_edit_log.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>logs/profile_edit_log.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>5MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
 
     <logger name="ch.supsi.backend_api_rest.controller.AuthenticationController" level="TRACE">
         <appender-ref ref="FILE"/>
+    </logger>
+    <logger name="ch.supsi.backend_api_rest.controller.EmployeeController" level="TRACE">
+        <appender-ref ref="FILE2"/>
     </logger>
     <!--Log root info and error on server log-->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">

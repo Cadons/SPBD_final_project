@@ -90,7 +90,10 @@ public class EmployeeController {
     @PutMapping("/profile")
     public ResponseEntity<EmployeeEntity> updateMe(@RequestBody EmployeeEntity employeeEntity) {
 
+
         employeeService.updateCurrentEmployee(employeeEntity);
+        LOG.trace(employeeService.getCurrentEmployee().getUsername()+" has updated his profile");
+
         return employeeEntity != null ? ResponseEntity.ok(employeeEntity) : ResponseEntity.notFound().build();
     }
 
@@ -100,7 +103,9 @@ public class EmployeeController {
             return ResponseEntity.badRequest().build();
         } else {
 
+
             var response = employeeService.changePassword(password.newPassword());
+            LOG.trace(employeeService.getCurrentEmployee().getUsername()+" has changed his password");
             return response ? ResponseEntity.ok(response) : ResponseEntity.badRequest().build();
         }
     }

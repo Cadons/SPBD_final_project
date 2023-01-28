@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,8 @@ import java.util.Objects;
 
 public class AuthenticationController {
     private static final Logger LOG = LoggerFactory.getLogger(AuthenticationController.class);
-
+@Value("${version}")
+    private String version;
     private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
 
@@ -96,9 +98,9 @@ public class AuthenticationController {
             }
             BearerToken = BearerToken.replace("refreshToken=", "");
             BearerToken = BearerToken.replace("; HttpOnly; SameSite=Strict;Path=/", "");
-
+            LOG.trace("User: " + tokenService.getUsernameFromToken(BearerToken) + " logged out");
             if (tokenService.revokeToken(BearerToken)) {
-                LOG.trace("User: " + tokenService.getUsernameFromToken(BearerToken) + " logged out");
+
                 //delete token and refreshtoken in cookie
                 HttpHeaders responseHeaders = new HttpHeaders();
                 var refreshToken = setRefreshTokenCookie("");
@@ -139,6 +141,11 @@ public class AuthenticationController {
         var token = getAuthResponseResponseEntity(BearerToken);
 
         return new ResponseEntity<>(new LoginResponse(Objects.requireNonNull(token.getBody()).token(), token.getBody().username(),token.getBody().role()), HttpStatus.OK);
+    }
+
+    @GetMapping("/version")
+    public String version() {
+        return version;
     }
 
     @NotNull

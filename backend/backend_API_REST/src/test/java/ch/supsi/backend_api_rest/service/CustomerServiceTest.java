@@ -197,6 +197,7 @@ public class CustomerServiceTest {
 
     @Test
 @Disabled
+
     void testDelete() {
         int id = 1;
         int size = customerService.getCount();
