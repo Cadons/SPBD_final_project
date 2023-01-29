@@ -1,0 +1,88 @@
+2023-01-25T11:20:03.873+01:00  INFO 30456 --- [restartedMain] c.s.b.BackendApiRestApplication          : Starting BackendApiRestApplication using Java 17.0.4.1 with PID 30456 (C:\Users\Matte\Documents\SPBD final\SPBD_final_project\backend\backend_API_REST\target\classes started by Matte in C:\Users\Matte\Documents\SPBD final\SPBD_final_project\backend\backend_API_REST)
+2023-01-25T11:20:03.878+01:00  INFO 30456 --- [restartedMain] c.s.b.BackendApiRestApplication          : No active profile set, falling back to 1 default profile: "default"
+2023-01-25T11:20:03.951+01:00  INFO 30456 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-01-25T11:20:03.951+01:00  INFO 30456 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-01-25T11:20:05.290+01:00  INFO 30456 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-01-25T11:20:05.292+01:00  INFO 30456 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2023-01-25T11:20:05.396+01:00  INFO 30456 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 18 ms. Found 0 Redis repository interfaces.
+2023-01-25T11:20:05.893+01:00  INFO 30456 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-01-25T11:20:05.895+01:00  INFO 30456 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-01-25T11:20:06.272+01:00  INFO 30456 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 371 ms. Found 2 JPA repository interfaces.
+2023-01-25T11:20:06.290+01:00  INFO 30456 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-01-25T11:20:06.290+01:00  INFO 30456 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2023-01-25T11:20:06.302+01:00  INFO 30456 --- [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface ch.supsi.backend_api_rest.repository.CustomerRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2023-01-25T11:20:06.303+01:00  INFO 30456 --- [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface ch.supsi.backend_api_rest.repository.EmployeeRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2023-01-25T11:20:06.304+01:00  INFO 30456 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.
+2023-01-25T11:20:07.515+01:00  INFO 30456 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 7000 (http)
+2023-01-25T11:20:07.534+01:00  INFO 30456 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-01-25T11:20:07.535+01:00  INFO 30456 --- [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.5]
+2023-01-25T11:20:07.643+01:00  INFO 30456 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-01-25T11:20:07.643+01:00  INFO 30456 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3691 ms
+2023-01-25T11:20:07.936+01:00  INFO 30456 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-01-25T11:20:08.043+01:00  INFO 30456 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.1.6.Final
+2023-01-25T11:20:08.351+01:00  WARN 30456 --- [restartedMain] org.hibernate.orm.deprecation            : HHH90000021: Encountered deprecated setting [javax.persistence.sharedCache.mode], use [jakarta.persistence.sharedCache.mode] instead
+2023-01-25T11:20:08.580+01:00  INFO 30456 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-01-25T11:20:08.890+01:00  INFO 30456 --- [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@47147bad
+2023-01-25T11:20:08.893+01:00  INFO 30456 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-01-25T11:20:08.923+01:00  INFO 30456 --- [restartedMain] SQL dialect                              : HHH000400: Using dialect: org.hibernate.dialect.MySQL5Dialect
+2023-01-25T11:20:08.924+01:00  WARN 30456 --- [restartedMain] org.hibernate.orm.deprecation            : HHH90000026: MySQL5Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2023-01-25T11:20:09.549+01:00  INFO 30456 --- [restartedMain] o.h.c.beanvalidation.TypeSafeActivator   : Error calling `jakarta.validation.Validation#buildDefaultValidatorFactory`
+
+jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+	at jakarta.validation.Validation$GenericBootstrapImpl.configure(Validation.java:291) ~[jakarta.validation-api-3.0.2.jar:na]
+	at jakarta.validation.Validation.buildDefaultValidatorFactory(Validation.java:103) ~[jakarta.validation-api-3.0.2.jar:na]
+	at org.hibernate.cfg.beanvalidation.TypeSafeActivator.getValidatorFactory(TypeSafeActivator.java:479) ~[hibernate-core-6.1.6.Final.jar:6.1.6.Final]
+	at org.hibernate.cfg.beanvalidation.TypeSafeActivator.activate(TypeSafeActivator.java:82) ~[hibernate-core-6.1.6.Final.jar:6.1.6.Final]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.hibernate.cfg.beanvalidation.BeanValidationIntegrator.integrate(BeanValidationIntegrator.java:137) ~[hibernate-core-6.1.6.Final.jar:6.1.6.Final]
+	at org.hibernate.internal.SessionFactoryImpl.<init>(SessionFactoryImpl.java:287) ~[hibernate-core-6.1.6.Final.jar:6.1.6.Final]
+	at org.hibernate.boot.internal.SessionFactoryBuilderImpl.build(SessionFactoryBuilderImpl.java:415) ~[hibernate-core-6.1.6.Final.jar:6.1.6.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1425) ~[hibernate-core-6.1.6.Final.jar:6.1.6.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66) ~[spring-orm-6.0.4.jar:6.0.4]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:376) ~[spring-orm-6.0.4.jar:6.0.4]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409) ~[spring-orm-6.0.4.jar:6.0.4]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396) ~[spring-orm-6.0.4.jar:6.0.4]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:352) ~[spring-orm-6.0.4.jar:6.0.4]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1797) ~[spring-beans-6.0.4.jar:6.0.4]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1747) ~[spring-beans-6.0.4.jar:6.0.4]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:599) ~[spring-beans-6.0.4.jar:6.0.4]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:521) ~[spring-beans-6.0.4.jar:6.0.4]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:326) ~[spring-beans-6.0.4.jar:6.0.4]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-6.0.4.jar:6.0.4]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:324) ~[spring-beans-6.0.4.jar:6.0.4]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:200) ~[spring-beans-6.0.4.jar:6.0.4]
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1130) ~[spring-context-6.0.4.jar:6.0.4]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:905) ~[spring-context-6.0.4.jar:6.0.4]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:584) ~[spring-context-6.0.4.jar:6.0.4]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.0.2.jar:3.0.2]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:730) ~[spring-boot-3.0.2.jar:3.0.2]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:432) ~[spring-boot-3.0.2.jar:3.0.2]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:308) ~[spring-boot-3.0.2.jar:3.0.2]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1302) ~[spring-boot-3.0.2.jar:3.0.2]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1291) ~[spring-boot-3.0.2.jar:3.0.2]
+	at ch.supsi.backend_api_rest.BackendApiRestApplication.main(BackendApiRestApplication.java:21) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:49) ~[spring-boot-devtools-3.0.2.jar:3.0.2]
+
+2023-01-25T11:20:10.852+01:00  INFO 30456 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-01-25T11:20:10.868+01:00  INFO 30456 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-01-25T11:20:13.741+01:00  WARN 30456 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-01-25T11:20:14.696+01:00  INFO 30456 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@ce1737c, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2555524b, org.springframework.security.web.context.SecurityContextHolderFilter@17b7ef76, org.springframework.security.web.header.HeaderWriterFilter@2fb86077, org.springframework.security.web.authentication.logout.LogoutFilter@53ae4719, org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter@65d47c7, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@607eae78, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@80beb4, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@495a5a59, org.springframework.security.web.session.SessionManagementFilter@505af519, org.springframework.security.web.access.ExceptionTranslationFilter@49f1a91b, org.springframework.security.web.access.intercept.AuthorizationFilter@54eca1c1]
+2023-01-25T11:20:15.313+01:00  INFO 30456 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2023-01-25T11:20:15.381+01:00  INFO 30456 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 7000 (http) with context path ''
+2023-01-25T11:20:15.394+01:00  INFO 30456 --- [restartedMain] c.s.b.BackendApiRestApplication          : Started BackendApiRestApplication in 12.295 seconds (process running for 13.938)
+2023-01-25T11:20:44.950+01:00  INFO 30456 --- [http-nio-7000-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-01-25T11:20:44.951+01:00  INFO 30456 --- [http-nio-7000-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-01-25T11:20:44.953+01:00  INFO 30456 --- [http-nio-7000-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2023-01-25T11:20:45.263+01:00 TRACE 30456 --- [http-nio-7000-exec-2] c.s.b.c.AuthenticationController         : Token requested for user: 'steve.johnson'
+2023-01-25T11:20:46.070+01:00 TRACE 30456 --- [http-nio-7000-exec-2] c.s.b.c.AuthenticationController         : Token granted: AuthResponse[token=eyJraWQiOiIyYWJkMzFjMC05NmNmLTQ4MTctYmJlMy04MmVkMzkzZTQwNjIiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzZWxmIiwic3ViIjoic3RldmUuam9obnNvbiIsImV4cCI6MTY3NDY0MjEwNSwiaWF0IjoxNjc0NjQyMDQ1LCJzY29wZSI6IlJPTEVfTUFOQUdFUiJ9.L5F9jJbskWX3MbRlocu3hkbN4u6AjCuyqfNnBMouLZxZ-QwbMRMPzzH-cATjzsMwf6hXbNQd4HP6KPFaHv65c5YVmmEU1scX76_CMTggO4LkYzMVxxDTy-iFqJcjVkJ_6e_UJe8-toTyxLlkG2NZpRe778uwtb75tyvVVQfMByunfypZ0y1DV6d5W4LHc6FlfwaXQGLAG_0-PH5xnVTx7g1t7koFhHGo0CXCFhO_OjooTptWPLQE2uOqQt-9QqvpJt4MZLJcvPQsp6WskuHWUxadxwJWn_pVL3s8JEb6Rvvwkf8MmiejEYbG9Q1b7Frd4ZmHfxoDgLtUmraOIOagGA, username=steve.johnson, refreshToken=eyJraWQiOiIyYWJkMzFjMC05NmNmLTQ4MTctYmJlMy04MmVkMzkzZTQwNjIiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzZWxmIiwic3ViIjoic3RldmUuam9obnNvbiIsImV4cCI6MTY3NDY0NTY0NiwiaWF0IjoxNjc0NjQyMDQ2LCJzY29wZSI6IlJPTEVfTUFOQUdFUiJ9.JSUEQ3c90OR3m4APS17853KnQcdc9PnkwPwXCHuEWzInPGNcuysqai84yiteB9H2HafSDMhYs0rap0dhk7fO3VuFczqI6pBPLQ_sdpk-QkLX5serrdbVueJ96WNhuaFvxh-a549xheCjwMXuug0ZzvCD8kEd5UIqpDJmayuJGN0VBD_NZP0TneZLN8PH7NTXUEwatqOQR_LyZV9GvFenHpxxm9PodPk8qQcI3xh8dNi_4qttfGP7tCLkWfsGIrW03FnVSE9evaJZ8YjFD5D9AuCnAF87xeS0qtkUXEjqfnx8KOGdieVIw71M-wjJqZnJZKIawdyRnqqo6Dr10lD8DA, tokenType=Bearer]
+2023-01-25T11:20:46.074+01:00 TRACE 30456 --- [http-nio-7000-exec-2] c.s.b.c.AuthenticationController         : User: steve.johnson logged in
+2023-01-25T11:36:42.197+01:00  INFO 30456 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-01-25T11:36:42.257+01:00  INFO 30456 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-01-25T11:36:42.305+01:00  INFO 30456 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
