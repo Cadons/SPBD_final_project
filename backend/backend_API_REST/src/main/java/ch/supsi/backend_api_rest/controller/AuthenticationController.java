@@ -67,6 +67,7 @@ public class AuthenticationController {
             String cookie = formatCookie(refreshToken);
             responseHeaders.add("Set-Cookie", cookie);
             responseHeaders.add("Set-Cookie", formatCookie(tokenCookie));
+            responseHeaders.add("Set-Cookie", formatCookie(username));
 
 
             return new ResponseEntity<>(new LoginResponse(token.token(), token.username(),token.role()), responseHeaders, HttpStatus.OK);
@@ -100,7 +101,7 @@ public class AuthenticationController {
             BearerToken = BearerToken.replace("refreshToken=", "");
             BearerToken = BearerToken.replace("; HttpOnly; SameSite=Strict;Path=/", "");
             }
-            LOG.trace("User: " + tokenService.getUsernameFromToken(BearerToken) + " logged out");
+            LOG.trace("User: " + username + " logged out");
             if (tokenService.revokeToken(BearerToken, username)) {
 
                 //delete token and refreshtoken in cookie

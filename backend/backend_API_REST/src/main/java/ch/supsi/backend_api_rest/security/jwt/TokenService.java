@@ -78,19 +78,27 @@ public class TokenService {
         }
 
     }
-public boolean revokeToken(String refreshToken, String username) {
-    tokenRefreshRepository.revokeToken(username);
-    tokenRefreshRepository.logoutUser(username);
-   return revokeToken(refreshToken);
-}
+
+    public boolean revokeToken(String refreshToken, String username) {
+        username = username.replace("username=", "");
+        String storedRefreshToken = tokenRefreshRepository.find("jwt-refresh-token:" + username);
+        tokenRefreshRepository.revokeToken(username);
+        tokenRefreshRepository.logoutUser(username);
+        if (!storedRefreshToken.equals(refreshToken.replace(" ", ""))) {
+            return false;
+        }
+        return true;
+    }
+
     public boolean revokeToken(String refreshToken) {
 
-
+        refreshToken = refreshToken.replace(" ", "");
         String username = getUsernameFromToken(refreshToken);
         String storedRefreshToken = tokenRefreshRepository.find("jwt-refresh-token:" + username);
         if (!storedRefreshToken.equals(refreshToken)) {
             return false;
         }
+
         tokenRefreshRepository.revokeToken(username);
         tokenRefreshRepository.logoutUser(username);
         return true;
