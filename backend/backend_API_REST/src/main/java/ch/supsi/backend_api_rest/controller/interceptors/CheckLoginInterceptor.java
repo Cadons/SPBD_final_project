@@ -53,6 +53,7 @@ enum Status{
     @Override
     public boolean preHandle(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) {
         //get token from cookie
+
         var cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -61,8 +62,11 @@ enum Status{
                 }
             }
         }
+if(request.getHeader("Authorization")!=null)
+{
+    var result = setEmployee(request.getHeader("Authorization"));
 
-        var result = setEmployee(request.getHeader("Authorization"));
+
         if (result == Status.UNAUTHORIZED) {
             response.setStatus(401);
             return false;
@@ -74,7 +78,10 @@ enum Status{
         else {
             return true;
         }
-
+    }else{
+        response.setStatus(401);
+        return false;
+    }
     }
 
 
