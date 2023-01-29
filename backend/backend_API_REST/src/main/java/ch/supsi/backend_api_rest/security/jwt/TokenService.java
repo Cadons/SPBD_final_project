@@ -78,14 +78,18 @@ public class TokenService {
         }
 
     }
-
+public boolean revokeToken(String refreshToken, String username) {
+    tokenRefreshRepository.revokeToken(username);
+    tokenRefreshRepository.logoutUser(username);
+   return revokeToken(refreshToken);
+}
     public boolean revokeToken(String refreshToken) {
 
 
         String username = getUsernameFromToken(refreshToken);
         String storedRefreshToken = tokenRefreshRepository.find("jwt-refresh-token:" + username);
         if (!storedRefreshToken.equals(refreshToken)) {
-            throw new InvalidBearerTokenException("Invalid refresh token");
+            return false;
         }
         tokenRefreshRepository.revokeToken(username);
         tokenRefreshRepository.logoutUser(username);

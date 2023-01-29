@@ -62,6 +62,7 @@ public class AuthenticationController {
 
             //expires in 10 minutes
             var refreshToken = setRefreshTokenCookie(token.refreshToken());
+            var username=setTokenCookie("username", token.username(), tokenService.getRefreshExpiration() * 60);
             var tokenCookie = setTokenCookie("Authorization", token.token(), tokenService.getTokenExpiration() * 60);
             String cookie = formatCookie(refreshToken);
             responseHeaders.add("Set-Cookie", cookie);
@@ -87,19 +88,20 @@ public class AuthenticationController {
         }
     }
 
+
     @PostMapping("/logout")
     public ResponseEntity<AuthResponse> logout(HttpServletRequest request) {
         try {
             //get refresh token from cookie
-            var BearerToken = request.getHeader("Cookie").split(";")[0];
+            var BearerToken = Arrays.stream(request.getHeader("Cookie").split(";")).filter(cookie -> cookie.contains("refreshToken")).findFirst().get();
+            var username = Arrays.stream(request.getHeader("Cookie").split(";")).filter(cookie -> cookie.contains("username")).findFirst().get();
+            if (BearerToken != null) {
 
-            if (BearerToken == null) {
-                return ResponseEntity.badRequest().build();
-            }
             BearerToken = BearerToken.replace("refreshToken=", "");
             BearerToken = BearerToken.replace("; HttpOnly; SameSite=Strict;Path=/", "");
+            }
             LOG.trace("User: " + tokenService.getUsernameFromToken(BearerToken) + " logged out");
-            if (tokenService.revokeToken(BearerToken)) {
+            if (tokenService.revokeToken(BearerToken, username)) {
 
                 //delete token and refreshtoken in cookie
                 HttpHeaders responseHeaders = new HttpHeaders();

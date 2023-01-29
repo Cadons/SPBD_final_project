@@ -40,6 +40,7 @@ public class TokenRefreshRepository {
         var user=redisTemplate.opsForValue().get("logged:"+username);
         return user != "" && user != null;
     }
+
     public String find(String username) {
         return redisTemplate.opsForValue().get(username);
     }
