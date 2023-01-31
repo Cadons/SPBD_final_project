@@ -81,7 +81,8 @@ public class TokenService {
 
     public boolean revokeToken(String refreshToken, String username) {
         username = username.replace("username=", "");
-        String storedRefreshToken = tokenRefreshRepository.find("jwt-refresh-token:" + username);
+        var tmp=("jwt-refresh-token:" + username).replace(" ","");
+        String storedRefreshToken = tokenRefreshRepository.find(tmp);
         tokenRefreshRepository.revokeToken(username);
         tokenRefreshRepository.logoutUser(username);
         if (!storedRefreshToken.equals(refreshToken.replace(" ", ""))) {

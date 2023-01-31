@@ -2,6 +2,7 @@ package ch.supsi.backend_api_rest.controller;
 
 import ch.supsi.backend_api_rest.model.CustomerEntity;
 import ch.supsi.backend_api_rest.model.EmployeeEntity;
+import ch.supsi.backend_api_rest.security.jwt.TokenService;
 import ch.supsi.backend_api_rest.security.login.ChangePasswordRequest;
 import ch.supsi.backend_api_rest.service.IEmployeeService;
 import org.slf4j.Logger;
@@ -22,11 +23,12 @@ public class EmployeeController {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmployeeController.class);
 
-
+private final TokenService tokenService;
     private final IEmployeeService employeeService;
 
     @Autowired
-    public EmployeeController(IEmployeeService employeeService) {
+    public EmployeeController(TokenService tokenService, IEmployeeService employeeService) {
+        this.tokenService = tokenService;
 
 
         this.employeeService = employeeService;
@@ -99,13 +101,14 @@ public class EmployeeController {
 
     @PutMapping("/profile/password")
     public ResponseEntity<Boolean> updatePassword(@RequestBody ChangePasswordRequest password) {
-        if (password.newPassword().length() <= 0 || password.newPassword().length() < 8) {
+        if (password.newPassword().length() <= 0 || password.newPassword().length() < 6||password.newPassword().length() > 14) {
             return ResponseEntity.badRequest().build();
         } else {
 
 
             var response = employeeService.changePassword(password.newPassword());
             LOG.trace(employeeService.getCurrentEmployee().getUsername()+" has changed his password");
+            tokenService.revokeUser(employeeService.getCurrentEmployee().getUsername());
             return response ? ResponseEntity.ok(response) : ResponseEntity.badRequest().build();
         }
     }
